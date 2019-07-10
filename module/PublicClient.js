@@ -1,0 +1,79 @@
+"use strict";
+var Client = require('../module/Client.js').Class
+var project = require('../module/Project.js');
+var schedule = require('../module/Schedule.js');
+var settings = require('../module/Settings.js');
+var urllist = require('../module/Urllist.js');
+
+var sd2p  = require('../module/StorageDestination2Project.js');
+var storage = {
+  aws: require('../module/Aws')
+}
+
+var extensionsfilter = {
+  "js":     ['js'],
+  "css":    ['css'],
+  "img":    ['png', 'jpg', 'gif', 'svg', 'ico', 'bmp', 'gif', 'tif', 'eps'],
+  "video":  ['mp4', 'wav', 'm4v', 'mov', 'mpg', 'wmv'],
+  "music":  ['mp3', 'wav', 'mpa', 'm4a', 'aif']
+}
+
+class PublicClient extends Client{
+
+
+  /**
+   * [getProjects delivers all Project settings for client]
+   * @return {Array}
+   */
+  getProjects(){
+    return new Promise(async (resolve, reject) => {
+      try {
+        let projects = await project.getAktiv();
+        if(projects.length==0)
+          resolve([]);
+        else{
+          var result = [];
+          let urlLists = await urllist._getListforProject(projects.map(e => e.ID));
+          for (let project of projects) {
+
+            project.SCHEDULE = project.SCHEDULE? await schedule.fetch(project.ID) : false;
+            if(Object.keys(project.SCHEDULE).length==0) project.SCHEDULE = false;
+
+            project.SETTINGS = await settings.fetch(project.ID);
+            project.URLLIST = urlLists[project.ID];
+
+            if(project.SETTINGS.EXTENSIONSFILTER.hasOwnProperty('all') && project.SETTINGS.EXTENSIONSFILTER.all === true){
+                project.SETTINGS.EXTENSIONSFILTER = ['ALL'];
+            }else{
+                let extensions = [];
+                for (let name in project.SETTINGS.EXTENSIONSFILTER) {
+                  if(project.SETTINGS.EXTENSIONSFILTER[name]===true){
+                    extensions = extensions.concat(extensionsfilter[name]);
+                  }
+                }
+                project.SETTINGS.EXTENSIONSFILTER = extensions;
+            }
+
+            if(project.SETTINGS.STORAGE_DESTINATION){
+              let [destination, id] = await sd2p.get(project.ID);
+              project.SETTINGS.STORAGE_DESTINATION = await storage[destination].getPublicSettings(id);
+            }
+            result.push(project);
+          }//for
+          // console.log(result);
+          resolve(result)
+        }
+      } catch (e) {
+        console.error(e);
+        reject(e)
+      }
+    });
+  }
+
+
+
+};
+
+
+
+module.exports = new PublicClient();
