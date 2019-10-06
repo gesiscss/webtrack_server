@@ -12,6 +12,8 @@ const path = require('path');
 const crypto = require('crypto');
 const fs = require('fs');
 const PAGES_BACKUP_PATH = path.resolve('pages_backup');
+const HTML_BACKUP_PATH = path.resolve('html_backup');
+
 
 class Page extends PageTableClass{
 
@@ -121,18 +123,21 @@ class Page extends PageTableClass{
         let pageId2dbId = {};
         for (let p of pages) {
           //save the pages in backup file
+
+          let content = p.content;
+          p.content = "";
           if(CREATE_BACKUP){
             console.log('create backup');
-            let fileName = [project_id, client_hash, moment().format('DD-MM-YY_HH-mm-ss'), crypto.createHash('md5').update(p.url).digest('hex')].join('_')+'.json';
+            let fileName = [project_id, client_hash, moment().format('DD-MM-YY_HH-mm-ss'), crypto.createHash('md5').update(p.url).digest('hex'), '.json'].join('_');
             console.log('write backup %s', fileName);
             fs.writeFileSync(path.resolve(PAGES_BACKUP_PATH, fileName), Buffer.from(JSON.stringify({
               project_id: project_id,
               client_hash: client_hash,
-              pages: [p],
+              page: p,
               versionType: versionType
             })))
-            // console.log(fileName);
-          }
+          }          
+
           let precursor_id = await this.getPrecursorId(c.ID, p.precursor_id);
           console.log('precursor_id %s', precursor_id);
           let insertId = (await super.create(project_id, c.ID, p.id, p.precursor_id, precursor_id, p.url, p.title, p.duration, p.start, p.meta.description, p.meta.keywords, versionType)).insertId;
@@ -149,21 +154,41 @@ class Page extends PageTableClass{
           for (let event of p.events) await events2page.add(insertId, event)
 
 
-          for (let i in p.content) {
-              console.log('replace data');
-              try {
+          for (let i in content) {
+            let fileName = insertId + '.html';
+            if (i > 0) {
+              // @tico: this is probably no longer necessary, idk why content is a list. I am
+              // just leaving it in case there is something I haven't seen. Afaik, only one version
+              // of the HTML is stored, it could be a previous version
+              fileName = insertId + '_v' + i + '.html';
+            }
+            //let fileName = [project_id, client_hash, moment().format('DD-MM-YY_HH-mm-ss'), crypto.createHash('md5').update(p.url).digest('hex'), '_v', i, '.html'].join('_');
+            //fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName + '_FULL.html'), Buffer.from(content[i].html))
+            try {
                 console.log('minify');
-                p.content[i].html = minify(p.content[i].html, {collapseWhitespace: true, removeComments: true})
+                content[i].html = minify(content[i].html, {collapseWhitespace: true, removeComments: true})
               } catch (err) {
                 console.log('Failed to minify html');
               } finally {
-                console.log('dataPage add');
-                await dataPage.add(insertId, parseInt(i, 10), p.content[i].html, p.source, moment(p.content[i].date).format('YYYY-MM-DD HH:mm:ss'));
+                console.log('Save html page');
+                fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName), Buffer.from(content[i].html))
+                //await dataPage.add(insertId, parseInt(i, 10), content[i].html, p.source, moment(content[i].date).format('YYYY-MM-DD HH:mm:ss'));
               }
+          }
+          p.content = content;
 
-              //
-
-          }//for
+          // for (let i in p.content) {
+          //     console.log('replace data');
+          //     try {
+          //       console.log('minify');
+          //       p.content[i].html = minify(p.content[i].html, {collapseWhitespace: true, removeComments: true})
+          //     } catch (err) {
+          //       console.log('Failed to minify html');
+          //     } finally {
+          //       console.log('dataPage add');
+          //       await dataPage.add(insertId, parseInt(i, 10), p.content[i].html, p.source, moment(p.content[i].date).format('YYYY-MM-DD HH:mm:ss'));
+          //     }
+          // }//for
 
         }//for
 
