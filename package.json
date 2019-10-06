@@ -10,7 +10,8 @@
   "main": "/bin/www",
   "scripts": {
     "start": "node --max-old-space-size=8192 ./bin/www.js",
-    "debug": "nodemon --inspect --max-old-space-size=4096 ./bin/www  APPDEBUG=1"
+    "light": "node --max-old-space-size=2048 ./bin/www.js",
+    "debug": "nodemon --inspect --max-old-space-size=2048 ./bin/www  APPDEBUG=1"
   },
   "dependencies": {
     "archiver": "^3.0.0",
