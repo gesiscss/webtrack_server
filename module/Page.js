@@ -142,24 +142,14 @@ class Page extends PageTableClass{
           console.log('events2page');
           for (let event of p.events) await events2page.add(insertId, event)
 
-          ////////////////
-          // WRITE JSON //
-          ////////////////
-          let fileName = insertId + '.json';
-          let content = p.content;
-          // the content is stored separatedly as plain html
-          p.content = fileName;
-          console.log('write json file %s', fileName);
-          fs.writeFileSync(path.resolve(PAGES_BACKUP_PATH, fileName), Buffer.from(JSON.stringify({
-            project_id: project_id,
-            client_hash: client_hash,
-            page: p,
-            versionType: versionType
-          })))
 
+          let content = p.content;
           ////////////////
           // WRITE HTML //
           ////////////////
+          let filenames = [];
+          let filenames_create = [];
+
           for (let i in content) {
             let fileName = insertId + '.html';
             if (i > 0) {
@@ -168,17 +158,37 @@ class Page extends PageTableClass{
               // of the HTML is stored, it could be a previous version
               fileName = insertId + '_v' + i + '.html';
             }
+            filenames.push(fileName);
+            filenames_create.push(content[i].create);
             try {
                 console.log('minify');
                 content[i].html = minify(content[i].html, {collapseWhitespace: true, removeComments: true})
-              } catch (err) {
-                console.log('Failed to minify html');
-              } finally {
-                console.log('Save html page');
-                fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName), Buffer.from(content[i].html))
-                //await dataPage.add(insertId, parseInt(i, 10), content[i].html, p.source, moment(content[i].date).format('YYYY-MM-DD HH:mm:ss'));
-              }
+            } catch (err) {
+              console.log('Failed to minify html');
+            } finally {
+              console.log('Save html page');
+              fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName), Buffer.from(content[i].html))
+              //await dataPage.add(insertId, parseInt(i, 10), content[i].html, p.source, moment(content[i].date).format('YYYY-MM-DD HH:mm:ss'));
+            }
           }
+
+          ////////////////
+          // WRITE JSON //
+          ////////////////
+          let fileName = insertId + '.json';
+
+          // the content is stored separatedly as plain HTMLs
+          p.content = filenames;
+          p['content_create'] = filenames_create
+          console.log('write json file %s', fileName);
+
+          fs.writeFileSync(path.resolve(PAGES_BACKUP_PATH, fileName), Buffer.from(JSON.stringify({
+            project_id: project_id,
+            client_hash: client_hash,
+            page: p,
+            versionType: versionType
+          })))
+
           p.content = content;
 
         }//for
