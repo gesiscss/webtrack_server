@@ -112,7 +112,7 @@ class Client extends ClientTableClass{
     return new Promise(async (resolve, reject) => {
       try {
         for (let e of list) {
-            await this.create(e, project_id);
+            await this.create(e.replace(/\n|\r/g, ""), project_id);
         }
         resolve();
       } catch (e) {
