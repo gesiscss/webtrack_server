@@ -113,7 +113,6 @@ class Client extends ClientTableClass{
       try {
         for (let e of list) {
           let client_id = e.replace(/\s/g, '');
-          console.log(client_id);
           if (client_id != ''){
             await this.create(client_id, project_id);
           }
