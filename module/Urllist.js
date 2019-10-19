@@ -29,7 +29,7 @@ class Urllist extends UrllistTableClass{
             let rows = await super._getListforProject(project_id);
             let result = {};
             for (let p of project_id) result[p] = [];
-            for (let r of rows) result[r.PROJECT_ID].push(r.URL.replace(/\r\n|\r|\n/g, ''));
+            for (let r of rows) result[r.PROJECT_ID].push(r.URL.replace(/\s/g, ''));
             cacheResolve(result);
           } catch (e) {
             cacheReject(e)
@@ -84,7 +84,12 @@ class Urllist extends UrllistTableClass{
         await this._checkPermission(user_id, project_id);
         this.cache.delete();
         let values = [];
-        for (let u of urls) values.push([project_id, u.replace(/\r\n|\r|\n/g, '')]);
+        for (let u of urls) {
+          let url = u.replace(/\s/g, '');
+          if (url != ''){
+            values.push([project_id, url]);
+          }
+        }
         let rows = await super.add(project_id, values);
         resolve(rows);
       } catch (e) {
