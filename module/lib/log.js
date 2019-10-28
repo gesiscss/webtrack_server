@@ -10,7 +10,7 @@ class Log {
     this.request = this.request.bind(this);
     this.error = this.error.bind(this);
     this.msg = this.msg.bind(this);
-    this.FOLDER = path.resolve('log');
+    this.FOLDER = path.resolve('storage', 'logs');
     this.REQUEST = 'request.log';
     this.ERROR = 'error.log';
     this.MSG = 'msg.log';
