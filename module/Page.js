@@ -10,9 +10,9 @@ var PageTableClass = require('./sql/PageTableClass.js');
 const path = require('path');
 const crypto = require('crypto');
 const fs = require('fs');
-const PAGES_BACKUP_PATH = path.resolve('pages_backup');
-const HTML_BACKUP_PATH = path.resolve('html_backup');
-const ERROR_BACKUP_PATH = path.resolve('error_backup');
+const PAGES_BACKUP_PATH = path.resolve('storage', 'json');
+const HTML_BACKUP_PATH = path.resolve('storage', 'html');
+const ERROR_BACKUP_PATH = path.resolve('storage', 'error');
 
 
 class Page extends PageTableClass{

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python -m json.tool error_backup/`ls -Art error_backup/ | tail -n $1 | head -n 1`
+python -m json.tool storage/error/`ls -Art storage/error/ | tail -n $1 | head -n 1`

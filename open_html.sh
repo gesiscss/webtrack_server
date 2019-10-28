@@ -1,3 +1,3 @@
 #!/bin/bash
 
-lynx html_backup/`ls -Art html_backup/ | tail -n $1 | head -n 1`
+lynx storage/html/`ls -Art storage/html/ | tail -n $1 | head -n 1`
