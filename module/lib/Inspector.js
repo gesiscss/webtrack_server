@@ -111,7 +111,7 @@ const schemaPages = {
             title: {
               type: 'string',
             },
-            url: {
+            unhashed_url: {
               type: 'string',
               exec: stringUrl
             }

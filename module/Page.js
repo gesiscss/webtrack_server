@@ -126,27 +126,20 @@ class Page extends PageTableClass{
           /////////////////
           // WRITE TO DB //
           /////////////////
-
           let precursor_id = await this.getPrecursorId(c.ID, p.precursor_id);
-          console.log('precursor_id %s', precursor_id);
-          let insertId = (await super.create(project_id, c.ID, p.id, p.precursor_id, precursor_id, p.url, p.title, p.duration, p.start, p.meta.description, p.meta.keywords, versionType)).insertId;
-          console.log('page id %s', insertId);
-          // console.log('insertId', insertId);
-
+          let insertId = (await super.create(project_id, c.ID, p.id, p.precursor_id, precursor_id, 
+            p.hostname, '', p.duration, p.start, '', '', versionType)).insertId;
           pageId2dbId[p.id] = insertId;
-          let children = await this.hasPageClient_PrecursorId(c.ID, p.id);
-          // console.log('hasPageClient_PrecursorId');
-          await this.setPrecursorId(children, insertId);
-          // console.log('setPrecursorId');
 
-          console.log('events2page');
+          let children = await this.hasPageClient_PrecursorId(c.ID, p.id);
+          await this.setPrecursorId(children, insertId);
+
           for (let event of p.events) await events2page.add(insertId, event)
 
-
-          let content = p.content;
           ////////////////
           // WRITE HTML //
           ////////////////
+          let content = p.content;
           let filenames = [];
           let filenames_create = [];
 
