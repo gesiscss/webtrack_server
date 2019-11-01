@@ -21,7 +21,7 @@ class Events2PageService extends Core{
     return new Promise(async (resolve, reject) => {
       try {
         let rows = await this.event2page.add(page_id, event.event, event.timestamp);
-        await this.events2data.add(rows.insertId, event.values);
+        //await this.events2data.add(rows.insertId, event.values);
         resolve();
       } catch (err) {
         reject(err);
