@@ -154,12 +154,10 @@ class Page extends PageTableClass{
             filenames.push(fileName);
             filenames_create.push(content[i].create);
             try {
-                console.log('minify');
                 content[i].html = minify(content[i].html, {collapseWhitespace: true, removeComments: true})
             } catch (err) {
               console.log('Failed to minify html');
             } finally {
-              console.log('Save html page');
               fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName), Buffer.from(content[i].html))
               //await dataPage.add(insertId, parseInt(i, 10), content[i].html, p.source, moment(content[i].date).format('YYYY-MM-DD HH:mm:ss'));
             }
@@ -173,7 +171,6 @@ class Page extends PageTableClass{
           // the content is stored separatedly as plain HTMLs
           p.content = filenames;
           p['content_create'] = filenames_create
-          console.log('write json file %s', fileName);
 
           fs.writeFileSync(path.resolve(PAGES_BACKUP_PATH, fileName), Buffer.from(JSON.stringify({
             project_id: project_id,
