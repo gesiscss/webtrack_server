@@ -3,7 +3,15 @@ const validUrl = require('valid-url');
 
 const stringDate = function (schema, post) {
   if (typeof post === 'string' && (new Date(post) === "Invalid Date" || isNaN(new Date(post)) )) {
-       this.report('muste be a sting date (2019-04-02T07:16:25.879Z)');
+       this.report('must be a string date (e.g. 2019-04-02T07:16:25.879Z)');
+       return '_INVALID_';
+  }
+  return post;
+}
+
+const numericDate = function (schema, post) {
+  if (typeof post === 'number' && (new Date(post) === "Invalid Date" || isNaN(new Date(post)) )) {
+       this.report('must be a string date (e.g. 2019-04-02T07:16:25.879Z)');
        return '_INVALID_';
   }
   return post;
@@ -41,6 +49,10 @@ const schemaPages = {
                 },
               }
             },
+            departing_url: {
+              type: 'string',
+              exec: stringUrl,
+            },
             duration: {
               type: 'integer',
             },
@@ -76,6 +88,16 @@ const schemaPages = {
               type: ['string'],
               minLength: 1
             },
+            hashes: {
+              type: 'array',
+            },
+            hostname: {
+              type: 'string',
+            },
+            landing_url: {
+              type: 'string',
+              exec: stringUrl,
+            },
             links: {
               type: 'array',
             },
@@ -93,6 +115,13 @@ const schemaPages = {
             precursor_id: {
               type: ['number', 'string', 'null']
             },
+            send: {
+              type: 'boolean',
+            },
+            sendTime: {
+              type: 'string',
+              exec: stringDate
+            },
             source: {
               type: 'array',
               items: {
@@ -107,6 +136,13 @@ const schemaPages = {
             start: {
               type: 'string',
               exec: stringDate
+            },
+            startTime: {
+              type: 'number',
+              exec: stringDate
+            },
+            tabId: {
+              type: ['integer', 'null'],
             },
             title: {
               type: 'string',
