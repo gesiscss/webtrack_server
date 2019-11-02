@@ -53,7 +53,7 @@ const schemaPages = {
               type: 'string',
               exec: stringUrl,
             },
-            duration: {
+            elapsed: {
               type: 'integer',
             },
             events: {

@@ -128,7 +128,7 @@ class Page extends PageTableClass{
           /////////////////
           let precursor_id = await this.getPrecursorId(c.ID, p.precursor_id);
           let insertId = (await super.create(project_id, c.ID, p.id, p.precursor_id, precursor_id, 
-            p.hostname, '', p.duration, p.start, '', '', versionType)).insertId;
+            p.hostname, '', p.elapsed, p.start, '', '', versionType)).insertId;
           pageId2dbId[p.id] = insertId;
 
           let children = await this.hasPageClient_PrecursorId(c.ID, p.id);
