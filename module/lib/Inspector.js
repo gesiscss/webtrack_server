@@ -1,5 +1,6 @@
 const inspector = require('schema-inspector');
 const validUrl = require('valid-url');
+var log = require('./module/lib/log');
 
 const stringDate = function (schema, post) {
   if (typeof post === 'string' && (new Date(post) === "Invalid Date" || isNaN(new Date(post)) )) {
@@ -168,10 +169,9 @@ class Inspector {
     return new Promise((resolve, reject) =>{
       inspector.validate(schemaPages, pages, (err, result) => {
           if(!result.valid){
-            reject(result.format())
-          } else {
-            resolve();
-          }
+            log.error(result.format())
+          } 
+          resolve();
       });
     });
   }
