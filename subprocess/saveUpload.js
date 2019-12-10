@@ -7,11 +7,8 @@ console.log = subprocess.log;
 process.on('message', (args) => setTimeout(async () => {
 
     try {
-      subprocess.log(process.pid, 'fetch args');
-      subprocess.log(Object.keys(args));
-      subprocess.log(process.pid, 'start save data');
+      subprocess.log(process.pid, 'save data:', args.project_id, args.client_hash);
       await page.create(args.project_id, args.client_hash, args.pages, args.versionType);
-      subprocess.log(process.pid, 'finish');
       subprocess.response({result: true});
       subprocess.close();
     } catch (err) {
