@@ -70,6 +70,26 @@ class PublicClient extends Client{
     });
   }
 
+  /**
+   * [startInstalllation just writes in the log that an installation started]
+   * @return {Array}
+   */
+  startInstallation(){
+    return new Promise(async (resolve, reject) => {
+      resolve(true);
+    });
+  }
+
+
+  /**
+   * [endInstallation just writes in the log that an installation ended]
+   * @return {Array}
+   */
+  endInstallation(){
+    return new Promise(async (resolve, reject) => {
+      resolve(true);
+    });
+  }
 
 
 };

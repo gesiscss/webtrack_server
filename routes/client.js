@@ -10,6 +10,14 @@ router.get('/getProjects', io({needVerify: false, callback: (r, io, next) => {
     publicClient.getProjects().then(io.res).catch(io.resError)
 }}));
 
+router.get('/startInstallation', io({needVerify: false, callback: (r, io, next) => {
+    publicClient.startInstallation().then(io.res).catch(io.resError)
+}}));
+
+router.get('/endInstallation', io({needVerify: false, callback: (r, io, next) => {
+    publicClient.endInstallation().then(io.res).catch(io.resError)
+}}));
+
 
 router.post('/checkid', schema.get('checkid'), io({needVerify: false, callback: (r, io, next) => {
     trackingPage.checkClientId2Project(r.body.client_hash, r.body.project_id, settings).then(io.res).catch(io.resError)
