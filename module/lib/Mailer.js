@@ -23,7 +23,12 @@ module.exports = class Mailer extends Config{
         await this._create(DEFAULT_SETTINGS);
       }else{
         let settings = await this._read();
-        if(Object.keys(settings).length>0 && Object.keys(settings.credentials).length>0 && JSON.stringify(settings.credentials).length != JSON.stringify(DEFAULT_SETTINGS.credentials).length){
+
+        if(Object.keys(settings).length>0 && 
+           Object.keys(settings.credentials).length>0 && 
+           JSON.stringify(settings.credentials).length != 
+           JSON.stringify(DEFAULT_SETTINGS.credentials).length && 
+           settings.credentials.host != "smtp.example.com"){
           this.transporter = nodemailer.createTransport(settings.credentials);
           this.settings = settings;
         }
@@ -42,7 +47,7 @@ module.exports = class Mailer extends Config{
     return new Promise(async (resolve, reject) => {
       try {
         if(this.transporter==null){
-          reject('Settings for mailer credentials not defined');
+          //reject('Settings for mailer credentials not defined');
         }else{
           let msg = Object.assign({}, DEFAULT_SETTINGS.mailOptions, this.settings.mailOptions, options);
           let info = await this.transporter.sendMail(msg)
