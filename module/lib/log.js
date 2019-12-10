@@ -18,7 +18,8 @@ class Log {
 
   writeLog(str, file){
 
-    if(fs.existsSync(file) && fs.statSync(file).size > 500000000){ // create a new file if the old log file bigger than 500MB are
+    // create a new file if the old log file bigger than 500MB are
+    if(fs.existsSync(file) && fs.statSync(file).size > 500000000){ 
       let splitName = file.split('.');
       let extension = splitName.pop();
       splitName.push(moment().format('DD-MM-YY_HH:mm:ss'), extension)
@@ -45,10 +46,21 @@ class Log {
     log2File(str, path.resolve(this.FOLDER, this.MSG));
   }
 
+  _getHashCode(str=''){
+    try {
+      var hash = 4243, i = str.length;
+      while(i)
+        hash = (hash * 31) ^ str.charCodeAt(--i);
+      return hash >>> 0;
+    } catch (err){
+      return str;
+    }
+  }
+
   request(req, res, next){
     // console.log(req);
     try {
-      this.requestLog([req.headers['x-forwarded-for'] || req.connection.remoteAddress, '"'+req.method, req.originalUrl+'"', '"'+req.headers['user-agent']+'"'].join(' '));
+      this.requestLog([req.headers['x-forwarded-for'] || this._getHashCode(req.connection.remoteAddress), '"'+req.method, req.originalUrl+'"', '"'+req.headers['user-agent']+'"'].join(' '));
     } catch (err) {
       Promise.reject(err)
     } finally {
