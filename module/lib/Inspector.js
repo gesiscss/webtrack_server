@@ -1,6 +1,6 @@
 const inspector = require('schema-inspector');
 const validUrl = require('valid-url');
-var log = require('./module/lib/log');
+var log = require('./log');
 
 const stringDate = function (schema, post) {
   if (typeof post === 'string' && (new Date(post) === "Invalid Date" || isNaN(new Date(post)) )) {
