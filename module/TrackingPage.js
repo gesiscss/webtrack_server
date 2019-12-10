@@ -23,16 +23,22 @@ class TrackingPage extends Page{
         if(await project.isId(project_id)){
           if((await settings.fetch(project_id)).CHECK_CLIENTIDS){
             client_hash = client_hash.trim();
-            if(await client.is(client_hash)){
-              resolve((await client.getHashCombies2Project(project_id)).includes(client_hash))
+            if((await client.getHashCombies2Project(project_id)).includes(client_hash)){
+              log.msg('Accepted Client-ID: ' + client_hash);
+              resolve(true);
             }else{
+              if(await client.is(client_hash)){
+                log.msg('Client-ID (' + client_hash + ') exists in the database,' + 
+                  + ' but not assigned to the project (' + project_id + ')' )
+              }
+              log.msg('Rejected Client-ID: ' + client_hash);
               resolve(false);
             }
           }else{
             resolve(true);
           }
         }else{
-          reject('Projekt-ID not found');
+          reject('Project-ID not found');
         }
       } catch (e) {
         reject(e)
