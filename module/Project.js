@@ -206,29 +206,30 @@ class Projekt extends ProjektTableClass{
    */
   getClients(user_id, project_id){
     return new Promise(async (resolve, reject) => {
-      try {
-        await this._checkPermission(user_id, project_id);
-        let client_ids = await page._getClientIds2Project(project_id);
-        if(client_ids.length===0)
-          resolve([]);
-        else{
-          let client_settings = await client.getClientHash(client_ids);
-          let pcActivity = await this._getProjectClientActivity(project_id, client_ids);
-          let clients = [];
-          for (let id of client_ids){
-            clients.push({
-              ID: id,
-              CLIENT_HASH: client_settings[id].CLIENT_HASH,
-              ACTIVITY: pcActivity[id].ACTIVITY,
-              COUNTPAGE: pcActivity[id].COUNTPAGE
-            });
-          }
-          resolve(clients);
-        }
-      } catch (e) {
-        console.log(e);
-        reject(e)
-      }
+      resolve([]);
+      // try {
+      //   await this._checkPermission(user_id, project_id);
+      //   let client_ids = await page._getClientIds2Project(project_id);
+      //   if(client_ids.length===0)
+      //     resolve([]);
+      //   else{
+      //     let client_settings = await client.getClientHash(client_ids);
+      //     let pcActivity = await this._getProjectClientActivity(project_id, client_ids);
+      //     let clients = [];
+      //     for (let id of client_ids){
+      //       clients.push({
+      //         ID: id,
+      //         CLIENT_HASH: client_settings[id].CLIENT_HASH,
+      //         ACTIVITY: pcActivity[id].ACTIVITY,
+      //         COUNTPAGE: pcActivity[id].COUNTPAGE
+      //       });
+      //     }
+      //     resolve(clients);
+      //   }
+      // } catch (e) {
+      //   console.log(e);
+      //   reject(e)
+      // }
     });
   }
 
