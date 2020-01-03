@@ -26,6 +26,17 @@ module.exports = class ProjektSettingsTableClass extends Core{
     return db.promiseQuery(sql);
   }
 
+
+
+  /**
+   * [fetchOne return all columns of the project]
+   * @param  {Array} project_id
+   * @return {Object}
+   */
+  fetchOne(project_id){
+    return db.promiseQuery("SELECT * FROM `"+this.table+"` WHERE `ID` = '" + project_id + "'");
+  }
+
   /**
    * [set check if colume exist and change it]
    * @param {[type]} project_id [description]

@@ -66,8 +66,24 @@ class Settings extends ProjektSettingsTableClass{
         reject(e)
       }
     });
-
   }
+
+  /**
+   * [fetch return all entrys]
+   * @param  {Array/Integer} project_id
+   * @return {Object}
+   */
+  fetchOne(project_id){
+    return new Promise(async (resolve, reject)=>{
+      try {
+        let rows = await super.fetchOne(project_id)
+        resolve(rows[0])
+      } catch (e) {
+        reject(e)
+      }
+    });
+  }
+
 
   /**
    * [get check Permisson and return all settings]

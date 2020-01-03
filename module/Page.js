@@ -109,29 +109,28 @@ class Page extends PageTableClass{
   }
 
   /**
-   * [create Save from client-hash the page-content to the project]
-   * @param  {String} client_hash
+   * [create Save from client-id the page-content to the project]
+   * @param  {Integer} client_id
    * @param  {Array} pages
    * @param  {String} versionType [e.g. 'Chrome' || 'yx']
    * @param  {Integer} project_id
    * @return {Boolean}
    */
-  create(project_id, client_hash, pages, versionType){
+  create(project_id, client_id, client_hash, pages, versionType){
     return new Promise(async (resolve, reject)=>{
       try {
-        let c = await client.create(client_hash, project_id);
         let pageId2dbId = {};
         for (let p of pages) {
 
           /////////////////
           // WRITE TO DB //
           /////////////////
-          let precursor_id = await this.getPrecursorId(c.ID, p.precursor_id);
-          let insertId = (await super.create(project_id, c.ID, p.id, p.precursor_id, precursor_id, 
+          let precursor_id = await this.getPrecursorId(client_id, p.precursor_id);
+          let insertId = (await super.create(project_id, client_id, p.id, p.precursor_id, precursor_id, 
             p.hostname, '', p.elapsed, p.start, '', '', versionType)).insertId;
           pageId2dbId[p.id] = insertId;
 
-          let children = await this.hasPageClient_PrecursorId(c.ID, p.id);
+          let children = await this.hasPageClient_PrecursorId(client_id, p.id);
           await this.setPrecursorId(children, insertId);
 
           for (let event of p.events) await events2page.add(insertId, event)

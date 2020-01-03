@@ -53,6 +53,27 @@ class TrackingPage extends Page{
 
 
   /**
+   * [checkClientId2Project check the client_hash has permisson to the project]
+   * @param  {Integer} project_id
+   * @return {Promise} project settings
+   */
+  getProjectConfiguration(project_id, client_hash){
+    return new Promise(async (resolve, reject) => {
+      try {
+        let conf = await settings.fetchOne(project_id);
+        if (conf.ACTIVE){
+          resolve(conf);
+        }else{
+          reject('Project-ID ' + project_id + ' not active. Client HASH: ' + client_hash);
+        }
+      } catch (e) {
+        reject('Unable to fetch Project-ID ' + project_id + ' during attempt from client HASH ' + client_hash + '.' +  e)
+      }
+    });
+  }
+
+
+  /**
    * [_checkUpload
    * - check the permisson of project-id and client_hash
    * - validate the pages
@@ -63,17 +84,22 @@ class TrackingPage extends Page{
    * @param  {String} versionType
    * @return {Promise}
    */
-  _checkUpload(project_id, client_hash, pages, versionType){
+  _checkUpload(project_conf, client_hash, pages, versionType){
     return new Promise(async (resolve, reject) => {
       try {
-        if(await this.checkClientId2Project(client_hash, project_id)){
-          await inspector.validatePage(pages)
-          resolve();
-        }else{
-          reject('Client-ID '+client_hash+' not allow to the project '+project_id);
+        if(project_conf.CHECK_CLIENTIDS){
+          let client_id = await client.getClientID(client_hash.trim());
+          if(await client.isClient2Project(client_id, project_conf.ID)){
+            await inspector.validatePage(pages)
+            resolve(client_id);
+          }else{
+            reject('Client-HASH ' + client_hash + ' not allow for the project ID: ' + project_conf.ID);
+          }
+        } else{
+          reject('NotImplementedError: Uploading without checking client ID is not implemented (Project ID: ' + project_conf.ID + ')')
         }
       } catch (err) {
-        reject(err)
+        reject('Error during Client-HASH request: ', client_hash, ' Error:', err)
       }
     });
   }
@@ -93,13 +119,15 @@ class TrackingPage extends Page{
   create(project_id, client_hash, pages, versionType, wait=false){
     return new Promise(async (resolve, reject) => {
       try {
-        await this._checkUpload(project_id, client_hash, pages, versionType);
+        let project_conf = await this.getProjectConfiguration(project_id, client_hash);
+        let client_id = await this._checkUpload(project_conf, client_hash, pages, versionType);
+
         let subprocess = new SubProcess();
         if(wait){
-          await subprocess.saveUpload({project_id: project_id, client_hash: client_hash, pages: pages, versionType: versionType});
+          await subprocess.saveUpload({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType});
         }else{
           // console.log('DISABLE Upload');
-          subprocess.saveUpload({project_id: project_id, client_hash: client_hash, pages: pages, versionType: versionType}).catch(error => {
+          subprocess.saveUpload({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType}).catch(error => {
             log.error(error);
           })
         }

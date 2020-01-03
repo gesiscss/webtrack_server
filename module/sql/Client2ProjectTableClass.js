@@ -53,6 +53,21 @@ module.exports = class Client2ProjectTableClass extends Core{
   }
 
   /**
+   * [isClient2Project check if the client has been assigned to the respective project]
+   * @return {Promise} Integer
+   */  
+   isClient2Project(client_id, project_id){
+    return new Promise(async (resolve, reject) => {
+      try {
+        let rows = await db.promiseQuery("SELECT 1 FROM `"+this.table+"` WHERE `CLIENT_ID` = " + client_id + " AND `PROJECT_ID` = " + project_id);
+        resolve(rows.length>0? true: false)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  }
+
+  /**
    * [getCountOfClientData return a number of quanitiy of data the client has]
    * @return {Promise} Integer
    */

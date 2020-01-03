@@ -49,6 +49,17 @@ class ClientTableClass extends Core{
     return db.promiseQuery("SELECT * FROM `"+this.table+"` WHERE `ID` = '"+id+"'");
   }
 
+
+  /**
+   * [get client id from client hash]
+   * @param  {String } client_hash
+   * @return {Promise}
+   */
+  getClientID(client_hash){
+    return db.promiseQuery("SELECT ID FROM `"+this.table+"` WHERE `CLIENT_HASH` = '"+client_hash+"'");
+  }
+
+
   /**
    * [getClientHash return entrys with filter]
    * @param  {Integer} project_id

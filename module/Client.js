@@ -43,6 +43,14 @@ class Client extends ClientTableClass{
     })
   }
 
+  /**
+   * [isClient2Project check if the client has been assigned to the respective project]
+   * @return {Promise} Boolean
+   */  
+   isClient2Project(client_id, project_id){
+      return this.c2p.isClient2Project(client_id, project_id);
+  }
+
 
   /**
    * [create client and return settings]
@@ -171,6 +179,23 @@ class Client extends ClientTableClass{
       try {
         let rows = await super.get(id);
         resolve(rows.length>0? rows[0]: false)
+      } catch (e) {
+        reject(e)
+      }
+    });
+  }
+
+
+  /**
+   * [get return client id from client_hash]
+   * @param  {String} client_hash
+   * @return {Object}
+   */
+  getClientID(client_hash){
+    return new Promise(async (resolve, reject) => {
+      try {
+        let rows = await super.getClientID(client_hash);
+        resolve(rows.length>0? rows[0].ID : false)
       } catch (e) {
         reject(e)
       }
