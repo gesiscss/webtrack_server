@@ -20,31 +20,24 @@ class TrackingPage extends Page{
   checkClientId2Project(client_hash, project_id){
     return new Promise(async (resolve, reject) => {
       try {
-        if(await project.isId(project_id)){
-          let conf = await settings.fetch(project_id);
-          if (conf.ACTIVE){
-            if(conf.CHECK_CLIENTIDS){
-              client_hash = client_hash.trim();
-              if((await client.getHashCombies2Project(project_id)).includes(client_hash)){
-                log.msg('Accepted Client-ID: ' + client_hash);
-                resolve(true);
-              }else{
-                if(await client.is(client_hash)){
-                  log.msg('Client-ID (' + client_hash + ') exists in the database,' + 
-                    + ' but not assigned to the project (' + project_id + ')' )
-                }
-                log.msg('Rejected Client-ID: ' + client_hash);
-                resolve(false);
-              }
-            }else{
-              resolve(true);
-            }
+        let project_conf = await this.getProjectConfiguration(project_id, client_hash);
+        if(project_conf.CHECK_CLIENTIDS){
+          let client_id = await client.getClientID(client_hash.trim());
+          if(await client.isClient2Project(client_id, project_conf.ID)){
+            log.msg('Accepted Client HASH: ' + client_hash);
+            resolve(true);
           }else{
-            reject('Project-ID not active, attempt from ' + client_hash);
+            if(await client.is(client_hash)){
+              log.msg('Client HASH (' + client_hash + ') exists in the database,' + 
+                + ' but not assigned to the project (' + project_id + ')' )
+            }
+            log.msg('Client HASH does not exist: ' + client_hash);
+            resolve(false);
           }
-        }else{
-          reject('Project-ID not found');
+        } else{
+          reject('NotImplementedError: Uploading without checking client ID is not implemented (Project ID: ' + project_conf.ID + ')')
         }
+
       } catch (e) {
         reject(e)
       }
