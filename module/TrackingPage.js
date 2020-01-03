@@ -21,21 +21,26 @@ class TrackingPage extends Page{
     return new Promise(async (resolve, reject) => {
       try {
         if(await project.isId(project_id)){
-          if((await settings.fetch(project_id)).CHECK_CLIENTIDS){
-            client_hash = client_hash.trim();
-            if((await client.getHashCombies2Project(project_id)).includes(client_hash)){
-              log.msg('Accepted Client-ID: ' + client_hash);
-              resolve(true);
-            }else{
-              if(await client.is(client_hash)){
-                log.msg('Client-ID (' + client_hash + ') exists in the database,' + 
-                  + ' but not assigned to the project (' + project_id + ')' )
+          let conf = await settings.fetch(project_id);
+          if (conf.ACTIVE){
+            if(conf.CHECK_CLIENTIDS){
+              client_hash = client_hash.trim();
+              if((await client.getHashCombies2Project(project_id)).includes(client_hash)){
+                log.msg('Accepted Client-ID: ' + client_hash);
+                resolve(true);
+              }else{
+                if(await client.is(client_hash)){
+                  log.msg('Client-ID (' + client_hash + ') exists in the database,' + 
+                    + ' but not assigned to the project (' + project_id + ')' )
+                }
+                log.msg('Rejected Client-ID: ' + client_hash);
+                resolve(false);
               }
-              log.msg('Rejected Client-ID: ' + client_hash);
-              resolve(false);
+            }else{
+              resolve(true);
             }
           }else{
-            resolve(true);
+            reject('Project-ID not active, attempt from ' + client_hash);
           }
         }else{
           reject('Project-ID not found');
