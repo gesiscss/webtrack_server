@@ -125,13 +125,13 @@ class Page extends PageTableClass{
           /////////////////
           // WRITE TO DB //
           /////////////////
-          let precursor_id = await this.getPrecursorId(client_id, p.precursor_id);
-          let insertId = (await super.create(project_id, client_id, p.id, p.precursor_id, precursor_id, 
+          //let precursor_id = await this.getPrecursorId(client_id, p.precursor_id);
+          let insertId = (await super.create(project_id, client_id, p.id, p.precursor_id, -1, //precursor_id, 
             p.hostname, '', p.elapsed, p.start, '', '', versionType)).insertId;
           pageId2dbId[p.id] = insertId;
 
-          let children = await this.hasPageClient_PrecursorId(client_id, p.id);
-          await this.setPrecursorId(children, insertId);
+          //let children = await this.hasPageClient_PrecursorId(client_id, p.id);
+          //await this.setPrecursorId(children, insertId);
 
           for (let event of p.events) await events2page.add(insertId, event)
 
