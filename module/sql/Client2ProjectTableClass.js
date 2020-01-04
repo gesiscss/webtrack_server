@@ -15,7 +15,7 @@ module.exports = class Client2ProjectTableClass extends Core{
    * @return {Boolean}
    */
   createTable(){
-    return db.promiseQuery("CREATE TABLE IF NOT EXISTS `"+this.table+"` ( `ID` INT(255) NOT NULL AUTO_INCREMENT , `CLIENT_ID` INT(255) NOT NULL , `PROJECT_ID` INT(255) NOT NULL , `CREATEDATE` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`ID`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_german2_ci;");
+    return db.promiseQuery("CREATE TABLE IF NOT EXISTS `"+this.table+"` ( `ID` INT(255) NOT NULL AUTO_INCREMENT , `CLIENT_ID` INT(255) NOT NULL , `PROJECT_ID` INT(255) NOT NULL , `CREATEDATE` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`ID`), UNIQUE INDEX c2p_idx (`PROJECT_ID`,`CLIENT_ID`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_german2_ci;");
   }
 
 

@@ -10,7 +10,7 @@ class ClientTableClass extends Core{
   }
 
   createTable(){
-    return db.promiseQuery("CREATE TABLE IF NOT EXISTS `"+this.table+"` ( `ID` INT(255) NOT NULL AUTO_INCREMENT , `CLIENT_HASH` varchar(255) NOT NULL , `CREATEDATE` TIMESTAMP NOT NULL , PRIMARY KEY (`ID`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_german2_ci;");
+    return db.promiseQuery("CREATE TABLE IF NOT EXISTS `"+this.table+"` ( `ID` INT(255) NOT NULL AUTO_INCREMENT , `CLIENT_HASH` varchar(255) NOT NULL , `CREATEDATE` TIMESTAMP NOT NULL , PRIMARY KEY (`ID`), INDEX hash_idx (`CLIENT_HASH`)) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_german2_ci;");
   }
 
   /**
