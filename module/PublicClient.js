@@ -4,6 +4,7 @@ var project = require('../module/Project.js');
 var schedule = require('../module/Schedule.js');
 var settings = require('../module/Settings.js');
 var urllist = require('../module/Urllist.js');
+const log = require('./lib/log');
 
 var sd2p  = require('../module/StorageDestination2Project.js');
 var storage = {
@@ -25,9 +26,15 @@ class PublicClient extends Client{
    * [getProjects delivers all Project settings for client]
    * @return {Array}
    */
-  getProjects(){
+  getProjects(request=null){
     return new Promise(async (resolve, reject) => {
       try {
+        if(request){
+          if (request.body){
+            log.msg('getProjects: ', request.body.client_hash)
+          }
+        }
+
         let projects = await project.getAktiv();
         if(projects.length==0)
           resolve([]);

@@ -6,8 +6,8 @@ var trackingPage = require('../module/TrackingPage.js');
 var settings = require('../module/Settings.js');
 var io = require('../module/IOHandler.js').io;
 
-router.get('/getProjects', io({needVerify: false, callback: (r, io, next) => {
-    publicClient.getProjects().then(io.res).catch(io.resError)
+router.post('/getProjects', io({needVerify: false, callback: (r, io, next) => {
+    publicClient.getProjects(r).then(io.res).catch(io.resError)
 }}));
 
 router.get('/startInstallation', io({needVerify: false, callback: (r, io, next) => {
