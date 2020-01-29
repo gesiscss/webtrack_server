@@ -152,22 +152,24 @@ class Page extends PageTableClass{
             }
             filenames.push(fileName);
             filenames_create.push(content[i].create);
-            console.log('logging works wokrs');
-            try {
-              var t0 = Date.now();
-              content[i].html = minify(content[i].html, {collapseWhitespace: true, removeComments: true})
-              var t1 = Date.now();
-              console.log("\nCall minify took " + (t1 - t0) + " milliseconds.");
 
-            } catch (err) {
-              console.log('Failed to minify html');
-            } finally {
-              var t0 = Date.now();
-              fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName), Buffer.from(content[i].html))
-              var t1 = Date.now();
-              console.log("\nCall write took " + (t1 - t0) + " milliseconds.");
-              //await dataPage.add(insertId, parseInt(i, 10), content[i].html, p.source, moment(content[i].date).format('YYYY-MM-DD HH:mm:ss'));
-            }
+            // try {
+            //   var t0 = Date.now();
+            //   content[i].html = minify(content[i].html, {collapseWhitespace: true, removeComments: true})
+            //   var t1 = Date.now();
+            //   console.log("\nCall minify took " + (t1 - t0) + " milliseconds.");
+
+            // } catch (err) {
+            //   console.log('Failed to minify html');
+            // } finally {
+            //   var t0 = Date.now();
+            //   fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName), Buffer.from(content[i].html))
+            //   var t1 = Date.now();
+            //   console.log("\nCall write took " + (t1 - t0) + " milliseconds.");
+            //   //await dataPage.add(insertId, parseInt(i, 10), content[i].html, p.source, moment(content[i].date).format('YYYY-MM-DD HH:mm:ss'));
+            // }
+
+            fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName), Buffer.from(content[i].html))
 
           }
 
