@@ -28,6 +28,8 @@ clientCertHandler.init().then(() => {
     var certServer = https.createServer(credentials, app).listen(certPort);
     certServer.on('error', onError);
     certServer.on('listening', () => onListening(certServer));
+    //certServer.timeout = 180000;
+    //console.log(certServer.timeout);
 
     var server = http.createServer((req, res) => {
         if(req.headers.hasOwnProperty('host')) res.writeHead(301, { "Location": "https://" + (req.headers['host'].includes(':')? req.headers['host'].split(':')[0]: req.headers['host']) + ':' +  certPort + req.url });
