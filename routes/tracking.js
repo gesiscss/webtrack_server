@@ -22,11 +22,11 @@ router.post ( '/upload', io({needVerify: false, callback: async (r, io, next) =>
 
   // uncomment to test high demand of requests, check the Simulator to
   // adjust values
-  simulator.simulate(r);
+  //simulator.simulate(r);
 
   // now call the promise
-  //trackingPage.create(r.body.projectId, r.body.id, 
-    //r.body.pages, r.body.versionType)
+  trackingPage.create(r.body.projectId, r.body.id, 
+    r.body.pages, r.body.versionType)
 }}));
 
 
