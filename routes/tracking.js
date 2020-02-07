@@ -13,8 +13,14 @@ router.get('/cert', (req, res, next) => {
 });
 
 router.post ( '/upload', io({needVerify: false, callback: async (r, io, next) => {
+  // if it is in memory, be optimistic, and assume that it will succeed,
+  // do not let the browser waiting. If it fails, there is nothing the client
+  // can do anyway
+  io.res();
+
+  // now call the promise
   trackingPage.create(r.body.projectId, r.body.id, 
-    r.body.pages, r.body.versionType).then(io.res).catch(io.resError)
+    r.body.pages, r.body.versionType)
 }}));
 
 
