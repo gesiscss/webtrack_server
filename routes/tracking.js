@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const trackingPage = require('../module/TrackingPage.js');
+const simulator = require('../module/Simulator.js');
+
 
 const OpenSSLHandler = require('../module/lib/OpenSSLHandler');
 const clientCertHandler = new OpenSSLHandler();
@@ -18,9 +20,13 @@ router.post ( '/upload', io({needVerify: false, callback: async (r, io, next) =>
   // can do anyway
   io.res();
 
+  // uncomment to test high demand of requests, check the Simulator to
+  // adjust values
+  simulator.simulate(r);
+
   // now call the promise
-  trackingPage.create(r.body.projectId, r.body.id, 
-    r.body.pages, r.body.versionType)
+  //trackingPage.create(r.body.projectId, r.body.id, 
+    //r.body.pages, r.body.versionType)
 }}));
 
 
