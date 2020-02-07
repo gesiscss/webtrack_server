@@ -54,7 +54,7 @@ var errorMailer = require('./module/lib/ErrorMailer');
 var app = express();
 
 
-app.use(timeout('20s'))
+app.use(timeout('120s'))
 app.use(log.request)
 
 //for http security
