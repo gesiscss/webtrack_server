@@ -82,9 +82,9 @@ module.exports = class PageTableClass extends Core{
   create(project_id, client_id, id, client_precursor_id, precursor_id, url, title, duration, start, description, keywords, versionType){
     return new Promise(async (resolve, reject) => {
       try {
-        let connection = await db._getConnect();
-        let r = await db.promiseQuery("INSERT INTO `"+this.table+"` (`PROJECT_ID`, `CLIENT_ID`, `CLIENT_PAGE_ID`, `CLIENT_PRECURSOR_ID`, `PRECURSOR_ID`, `URL`, `TITLE`, `DURATION`, `STARTTIME`, `DESCRIPTION`, `KEYWORDS`, `TYPEVERSION`) VALUES ?", [[[project_id, client_id, id, client_precursor_id, precursor_id, url, title, duration, moment(start).format('YYYY-MM-DD HH:mm:ss'), description, connection.escape(keywords), versionType]]]);
-        connection.release();
+        //let connection = await db._getConnect();
+        let r = await db.promiseQuery("INSERT INTO `"+this.table+"` (`PROJECT_ID`, `CLIENT_ID`, `CLIENT_PAGE_ID`, `CLIENT_PRECURSOR_ID`, `PRECURSOR_ID`, `URL`, `TITLE`, `DURATION`, `STARTTIME`, `DESCRIPTION`, `KEYWORDS`, `TYPEVERSION`) VALUES ?", [[[project_id, client_id, id, client_precursor_id, precursor_id, url, title, duration, moment(start).format('YYYY-MM-DD HH:mm:ss'), '', '', versionType]]]);
+        //connection.release();
         resolve(r);
       } catch (err) {
         reject(err)

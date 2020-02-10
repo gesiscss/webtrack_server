@@ -16,4 +16,4 @@ process.on('message', (args) => setTimeout(async () => {
       subprocess.close(true);
     }
 
-}, 1000))
+},50))
