@@ -9,6 +9,7 @@
   "private": true,
   "main": "/bin/www",
   "scripts": {
+    "maxprod": "node --max-old-space-size=57344 ./bin/www.js",
     "prod": "node --max-old-space-size=24576 ./bin/www.js",
     "start": "node --max-old-space-size=8192 ./bin/www.js",
     "light": "node --max-old-space-size=512 ./bin/www.js",
