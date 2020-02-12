@@ -1,6 +1,7 @@
 "use strict";
 const Page = require('./Page.js');
 const SubProcess = require('./lib/SubProcess.js');
+const celery = require('./lib/Celery.js');
 const client = require('./Client.js').client;
 const settings = require('./Settings.js');
 const project = require('./Project.js');
@@ -119,6 +120,7 @@ class TrackingPage extends Page{
         if(wait){
           await subprocess.saveUpload({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType});
         }else{
+          celery.queue({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType});
           // console.log('DISABLE Upload');
           subprocess.saveUpload({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType}).catch(error => {
             log.error(error);
