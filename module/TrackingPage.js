@@ -1,7 +1,7 @@
 "use strict";
 const Page = require('./Page.js');
 const SubProcess = require('./lib/SubProcess.js');
-const celery = require('./lib/Celery.js');
+const queue = require('./lib/SaveQueue.js');
 const client = require('./Client.js').client;
 const settings = require('./Settings.js');
 const project = require('./Project.js');
@@ -116,16 +116,22 @@ class TrackingPage extends Page{
         let project_conf = await this.getProjectConfiguration(project_id, client_hash);
         let client_id = await this._checkUpload(project_conf, client_hash, pages, versionType);
 
-        let subprocess = new SubProcess();
-        if(wait){
-          await subprocess.saveUpload({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType});
-        }else{
-          celery.queue({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType});
-          // console.log('DISABLE Upload');
-          subprocess.saveUpload({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType}).catch(error => {
-            log.error(error);
-          })
-        }
+        //let subprocess = new SubProcess();
+        // if(wait){
+        //   await subprocess.saveUpload({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType});
+        // }else{
+        //   // console.log('DISABLE Upload');
+        //   subprocess.saveUpload({project_id: project_id, client_id: client_id, client_hash: client_hash, pages: pages, versionType: versionType}).catch(error => {
+        //     log.error(error);
+        //   })
+        // }
+        queue.add_page({
+          project_id: project_id, 
+          client_id: client_id, 
+          client_hash: client_hash, 
+          pages: pages, 
+          versionType: versionType});
+
         resolve();
       } catch (err) {
         reject(err);

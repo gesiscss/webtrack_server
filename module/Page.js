@@ -4,7 +4,7 @@ var moment = require('moment');
 var minify = require('html-minifier').minify;
 var dataPage = require('../module/DataPage.js');
 var events2page = require('../module/Events2Page.js');
-
+var log = require('../module/lib/log');
 var PageTableClass = require('./sql/PageTableClass.js');
 
 const path = require('path');
@@ -201,6 +201,7 @@ class Page extends PageTableClass{
           console.log(e);
         }
 
+        log.error(e);
 
         ////////////////////////
         // WRITE FULL CONTENT //
@@ -216,6 +217,9 @@ class Page extends PageTableClass{
           pages: pages,
           versionType: versionType
         })))
+
+        log.msg('Save full error JSON');
+
         
         reject(e)
       }
