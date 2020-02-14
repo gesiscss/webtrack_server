@@ -22,12 +22,12 @@ class SaveQueue {
     });
 
     this.queue.on('error', (err) => {
-      console.log(`Redis error job: ${job.id} HASH: ${job.data.client_hash}`);
+      //console.log(`Redis error job: ${job.id} HASH: ${job.data.client_hash}`);
       log.error(err);
     });
 
     this.queue.on('failed', (job, err) => {
-      console.log(`Failed job: ${job.id} HASH: ${job.data.client_hash}`);
+      //console.log(`Failed job: ${job.id} HASH: ${job.data.client_hash}`);
       log.error(err);
     });
 
