@@ -4,7 +4,28 @@ var log = require('./log');
 
 class SaveQueue {
   constructor() {
-    this.queue = new Queue('saves');
+    this.queue = new Queue('saves', {
+      prefix: 'bq',
+      stallInterval: 5000,
+      nearTermWindow: 1200000,
+      delayedDebounce: 1000,
+      redis: {
+        host: '127.0.0.1',
+        port: 6379,
+        db: 0,
+        options: {}
+      },
+      isWorker: true,
+      getEvents: true,
+      sendEvents: true,
+      storeJobs: true,
+      ensureScripts: true,
+      activateDelayedJobs: false,
+      //do not keep jobs in memory!
+      removeOnSuccess: true,
+      removeOnFailure: true,
+      redisScanCount: 100
+    });
     let page = new Page();
 
     this.queue.process(async (job) => {
