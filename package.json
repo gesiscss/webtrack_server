@@ -13,6 +13,10 @@
     "prod": "node --max-old-space-size=24576 ./bin/www.js",
     "start": "node --max-old-space-size=8192 ./bin/www.js",
     "light": "node --max-old-space-size=512 ./bin/www.js",
+    "forever_maxprod": "forever start -a -l ~/webtrack_server/storage/logs/forever.log -e ~/webtrack_server/storage/logs/forever_error.log -o ~/webtrack_server/storage/logs/forever_out.log --max-old-space-size=53248 ./bin/www.js",
+    "forever_prod": "forever start -a -l ~/webtrack_server/storage/logs/forever.log -e ~/webtrack_server/storage/logs/forever_error.log -o ~/webtrack_server/storage/logs/forever_out.log --max-old-space-size=24576 ./bin/www.js",
+    "forever_start": "forever start -a -l ~/webtrack_server/storage/logs/forever.log -e ~/webtrack_server/storage/logs/forever_error.log -o ~/webtrack_server/storage/logs/forever_out.log --max-old-space-size=8192 ./bin/www.js",
+    "forever_light": "forever start -a -l ~/webtrack_server/storage/logs/forever.log -e ~/webtrack_server/storage/logs/forever_error.log -o ~/webtrack_server/storage/logs/forever_out.log --max-old-space-size=512 ./bin/www.js",
     "debug": "nodemon --inspect --max-old-space-size=512 ./bin/www  APPDEBUG=1"
   },
   "dependencies": {
@@ -30,6 +34,7 @@
     "express-json-validator-middleware": "^1.2.3",
     "express-validator": "^5.2.0",
     "file-db": "0.0.2",
+    "forever": "^2.0.0",
     "formidable": "^1.2.1",
     "helmet": "^3.21.1",
     "html-minifier": "^3.5.17",
