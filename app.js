@@ -41,6 +41,10 @@ var client = require('./routes/client');
 var ioError = require('./module/IOHandler').error;
 var log = require('./module/lib/log');
 
+var errorMailer = require('./module/lib/ErrorMailer');
+
+var limiter = require('./module/Limiter').limiter;
+var banner = require('./module/Limiter').banner;
 
 setTimeout(function () {
   var cron = require('./module/Cronjob');
@@ -49,11 +53,10 @@ setTimeout(function () {
 }, 1000);
 
 
-var errorMailer = require('./module/lib/ErrorMailer');
-
 var app = express();
 
-
+app.use('/tracking/upload', banner);
+app.use('/tracking/upload',limiter)
 app.use(timeout('180s'))
 app.use(log.request)
 
