@@ -19,7 +19,7 @@ function Limiter() {
       log.msg('Limit reached!') // req.ip
       bannedIPs[req.ip] = +new Date() + banned_ms;
     },
-    max: 5, // limit each IP to 100 requests per windowMs
+    max: max_requests, // limit each IP to 100 requests per windowMs
     windowMs: window_secs * 1000
   });
 
