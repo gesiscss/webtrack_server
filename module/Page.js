@@ -169,7 +169,9 @@ class Page extends PageTableClass{
             //   //await dataPage.add(insertId, parseInt(i, 10), content[i].html, p.source, moment(content[i].date).format('YYYY-MM-DD HH:mm:ss'));
             // }
 
-            fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName), Buffer.from(content[i].html))
+            if (content[i].html !== '<EMPTY>'){ 
+              fs.writeFileSync(path.resolve(HTML_BACKUP_PATH, fileName), Buffer.from(content[i].html))
+            }
 
           }
 
