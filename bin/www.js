@@ -18,8 +18,8 @@ clientCertHandler.init().then(() => {
     /**
      * Get port from environment and store in Express.
      */
-    var port = normalizePort(process.env.PORT || '9080');
-    var certPort = normalizePort(process.env.SSLPORT || '9443');
+    var port = normalizePort(process.env.PORT || '10080');
+    var certPort = normalizePort(process.env.SSLPORT || '10443');
     app.set('port', port);
 
      /**
