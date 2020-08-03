@@ -14,6 +14,10 @@
 global.debug = process.argv.join('#').includes('APPDEBUG=')? process.argv.filter(arg => arg.includes('APPDEBUG=')).map(arg => parseInt(arg.split('=')[1], 10)>0)[0] : false
 
 
+
+var logtimestamp = require('log-timestamp');
+
+
 var express = require('express');
 
 var path = require('path');
