@@ -52,7 +52,6 @@ const schemaPages = {
             },
             departing_url: {
               type: 'string',
-              exec: stringUrl,
             },
             elapsed: {
               type: 'integer',
@@ -97,7 +96,6 @@ const schemaPages = {
             },
             landing_url: {
               type: 'string',
-              exec: stringUrl,
             },
             links: {
               type: 'array',
@@ -150,7 +148,6 @@ const schemaPages = {
             },
             unhashed_url: {
               type: 'string',
-              exec: stringUrl
             }
         }//properties
     }
