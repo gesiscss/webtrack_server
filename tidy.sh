@@ -1,3 +1,3 @@
 #!/bin/bash
 
-tidy storage/html/`ls -Art storage/html/$1.html
+tidy storage/html/$1.html
