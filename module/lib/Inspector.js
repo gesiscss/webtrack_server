@@ -50,7 +50,7 @@ const schemaPages = {
                 },
               }
             },
-            departing_url: {
+            content_url: {
               type: 'string',
             },
             elapsed: {
