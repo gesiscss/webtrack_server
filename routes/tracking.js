@@ -9,6 +9,7 @@ const OpenSSLHandler = require('../module/lib/OpenSSLHandler');
 const clientCertHandler = new OpenSSLHandler();
 const io = require('../module/IOHandler.js').io;
 
+const controlLists = require('../module/ControlLists.js');
 
 router.get('/cert', (req, res, next) => {
   res.sendFile(clientCertHandler.ssl.cert);
@@ -29,5 +30,8 @@ router.post ( '/upload', io({needVerify: false, callback: async (r, io, next) =>
     r.body.pages, r.body.versionType)
 }}));
 
+router.post ('/controllists', io({needVerify: false, callback: (r, io, next) => {
+  controlLists.queryURL(r).then(io.res).catch(io.resError)
+}}));
 
 module.exports = router;
