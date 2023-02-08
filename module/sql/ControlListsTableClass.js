@@ -1,5 +1,6 @@
 const db = require('../lib/Db.js');
 const Core = require('../lib/Core.js');
+const Redis = require('redis');
 
 module.exports = class ControlListsTableClass extends Core{
 
@@ -13,8 +14,9 @@ module.exports = class ControlListsTableClass extends Core{
    * @return {Promise}
    */
   async createTable(){
-    await db.promiseQuery("CREATE TABLE IF NOT EXISTS `"+this.table+"` (clean_domain VARCHAR(40) PRIMARY KEY, criteria TEXT) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_german2_ci;");
-    return this.populateTable();
+    await db.promiseQuery("CREATE TABLE IF NOT EXISTS `"+this.table+"` (`CLEAN_DOMAIN` VARCHAR(200) PRIMARY KEY, `CRITERIA` TEXT) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_german2_ci;");
+    await this.populateTable();
+    return this.loadRedis();
   }
 
   populateTable(){
@@ -38,5 +40,15 @@ module.exports = class ControlListsTableClass extends Core{
     return db.promiseQuery("SELECT * FROM `"+this.table+"`");
   }
 
-
+  async loadRedis() {
+    let client = Redis.createClient();
+    client.on("error", function (err) {
+      console.log("Error " + err);
+    });
+    let controlList = await this.getAll();
+    for (const record in controlList){
+      client.set(controlList[record].CLEAN_DOMAIN, controlList[record].CRITERIA);
+    };
+    client.quit();
+  }
 }//class

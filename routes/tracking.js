@@ -30,6 +30,8 @@ router.post ( '/upload', io({needVerify: false, callback: async (r, io, next) =>
     r.body.pages, r.body.versionType)
 }}));
 
+//a call to the controllists route which based on the controlLists class return one of the following flags:
+//full_deny, full_allow, only_domain, only_url
 router.post ('/controllists', io({needVerify: false, callback: (r, io, next) => {
   controlLists.queryURL(r).then(io.res).catch(io.resError)
 }}));

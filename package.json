@@ -12,12 +12,12 @@
     "maxprod": "node --max-old-space-size=53248 ./bin/www.js",
     "prod": "node --max-old-space-size=24576 ./bin/www.js",
     "start": "node --max-old-space-size=8192 ./bin/www.js",
-    "light": "node --max-old-space-size=512 ./bin/www.js",
+    "light": "node --max-old-space-size=1024 ./bin/www.js",
     "forever_maxprod": "forever start -a -l ~/webtrack_server/storage/logs/forever.log -e ~/webtrack_server/storage/logs/forever_error.log -o ~/webtrack_server/storage/logs/forever_out.log --max-old-space-size=53248 ./bin/www.js",
     "forever_prod": "forever start -a -l ~/webtrack_server/storage/logs/forever.log -e ~/webtrack_server/storage/logs/forever_error.log -o ~/webtrack_server/storage/logs/forever_out.log --max-old-space-size=24576 ./bin/www.js",
     "forever_start": "forever start -a -l ~/webtrack_server/storage/logs/forever.log -e ~/webtrack_server/storage/logs/forever_error.log -o ~/webtrack_server/storage/logs/forever_out.log --max-old-space-size=8192 ./bin/www.js",
     "forever_light": "forever start -a -l ~/webtrack_server/storage/logs/forever.log -e ~/webtrack_server/storage/logs/forever_error.log -o ~/webtrack_server/storage/logs/forever_out.log --max-old-space-size=512 ./bin/www.js",
-    "debug": "nodemon --inspect --max-old-space-size=512 ./bin/www  APPDEBUG=1"
+    "debug": "nodemon --inspect --max-old-space-size=1024 ./bin/www  APPDEBUG=1"
   },
   "dependencies": {
     "archiver": "^3.0.0",
@@ -47,6 +47,8 @@
     "mysql": "^2.15.0",
     "navigator": "^1.0.1",
     "node-cache": "^4.2.0",
+    "node-fetch": "^2.6.7",
+    "node-http": "0.0.5",
     "nodemailer": "^5.1.1",
     "nodemon": "^2.0.2",
     "openssl-wrapper": "^0.3.4",
