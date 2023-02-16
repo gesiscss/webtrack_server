@@ -41,10 +41,11 @@ module.exports = class ControlListsTableClass extends Core{
   }
 
   async loadRedis() {
-    let client = Redis.createClient();
+    let client = Redis.createClient({db: 1});
     client.on("error", function (err) {
       console.log("Error " + err);
     });
+    client.flushall(); //clearing the controllist from redis on server installation
     let controlList = await this.getAll();
     for (const record in controlList){
       client.set(controlList[record].CLEAN_DOMAIN, controlList[record].CRITERIA);

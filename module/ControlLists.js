@@ -14,6 +14,7 @@ class ControlLists {
     this.webShrinkerCategoryTable = new WebshrinkerCategoryTableClass;
     this.webShrinkerLogTable = new WebshrinkerLogTableClass;
     this.cacheExpiration = 90 * 24 * 60 * 60 * 1000;
+    this.redisClient = Redis.createClient({db: 1});
   }
 
   /**
@@ -24,14 +25,6 @@ class ControlLists {
   queryURL(request) {
     return new Promise(async (resolve, reject) => {
       try {
-        /*
-        let client = Redis.createClient();
-        client.on("error", function (err) {
-          console.log("Error " + err);
-        });
-        client.get("aok.de", Redis.print);
-        client.quit();
-        */
         //checks if the url contains 'www' and removes it if it does
         let url = request.body.domain;
         if (url.startsWith('www.')){
@@ -39,35 +32,36 @@ class ControlLists {
         } else {
           var domain = url;
         }
-        //first check is in the manual control list table (which is populated from the csv file)
-        let rows = await this.controlListTable.get(domain);
-        if (rows.length) {
-          var result = rows[0].criteria;
-          console.log('found in Control-List');
-        } else {
-          //second check is in the webshrinker cache table 
-          let rows = await this.webShrinkerTable.get(domain);
-          if (rows.length && new Date() - rows[0].TIMESTAMP < this.cacheExpiration) {   //check if domain is in cache table AND if record is not older than 90 days
-            console.log('found in WebShrinker cache table');
-            let response = JSON.parse(rows[0].RESPONSE);
-            let category = response.data[0].categories[0].label;
-            console.log('Category: ', category);
-            //if found in webshrinker cache table we check the rule for the category in the categories table
-            var result = await this.queryCategory(category);
+        //first check is in the control list table (which is populated from the csv file)
+        this.redisClient.get(domain, async (err, value) => {
+          if (value !== null) {
+            var result = value;
+            console.log('found in Control-List');
           } else {
-            //if not found in the control list table or the webshrinker cache we query the webshrinker API
-            console.log('Querying Webshrinker Service');
-            let WSresult = await WebshrinkerWrapper.queryWebshrinker(domain);
-            this.webShrinkerTable.insert_or_update(domain, JSON.stringify(WSresult)); //adding the response to the cache table
-            this.webShrinkerLogTable.insert(domain, JSON.stringify(WSresult)); //adding the response to the log table
-            let category = WSresult.data[0].categories[0].label
-            console.log('Category from WS: ', category);
-            //querying the category from the response in the category rules table
-            var result = await this.queryCategory(category);
+            //second check is in the webshrinker cache table 
+            let rows = await this.webShrinkerTable.get(domain);
+            if (rows.length && new Date() - rows[0].TIMESTAMP < this.cacheExpiration) {   //check if domain is in cache table AND if record is not older than 90 days
+              console.log('found in WebShrinker cache table');
+              let response = JSON.parse(rows[0].RESPONSE);
+              let category = response.data[0].categories[0].label;
+              console.log('Category: ', category);
+              //if found in webshrinker cache table we check the rule for the category in the categories table
+              var result = await this.queryCategory(category);
+            } else {
+              //if not found in the control list table or the webshrinker cache we query the webshrinker API
+              console.log('Querying Webshrinker Service');
+              let WSresult = await WebshrinkerWrapper.queryWebshrinker(domain);
+              this.webShrinkerTable.insert_or_update(domain, JSON.stringify(WSresult)); //adding the response to the cache table
+              this.webShrinkerLogTable.insert(domain, JSON.stringify(WSresult)); //adding the response to the log table
+              let category = WSresult.data[0].categories[0].label
+              console.log('Category from WS: ', category);
+              //querying the category from the response in the category rules table
+              var result = await this.queryCategory(category);
+            }
           }
-        }
-        console.log('result:', result);
-        resolve(result);
+          console.log('result:', result);
+          resolve(result);
+        });
       } catch (e) {
         console.error(e);
         reject(e)

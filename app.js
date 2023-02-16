@@ -50,6 +50,8 @@ var errorMailer = require('./module/lib/ErrorMailer');
 var limiter = require('./module/Limiter').limiter;
 var banner = require('./module/Limiter').banner;
 
+var redisLoader = require('./module/ControlListsRedisLoader');
+
 setTimeout(function () {
   var cron = require('./module/Cronjob');
   var downloadProject = require('./module/DownloadProject');
@@ -130,7 +132,8 @@ process.on('unhandledRejection', async (type, promise, reason) => {
 });
 
 
-
+//checks if the control list is loaded to redis, if not, it populates it from controllist.csv
+redisLoader.checkIfEmpty();
 
 
 module.exports = app;
