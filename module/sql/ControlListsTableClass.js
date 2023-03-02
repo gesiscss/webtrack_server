@@ -45,7 +45,7 @@ module.exports = class ControlListsTableClass extends Core{
     client.on("error", function (err) {
       console.log("Error " + err);
     });
-    client.flushall(); //clearing the controllist from redis on server installation
+    client.flushdb(); //clearing the controllist from redis on server installation
     let controlList = await this.getAll();
     for (const record in controlList){
       client.set(controlList[record].CLEAN_DOMAIN, controlList[record].CRITERIA);

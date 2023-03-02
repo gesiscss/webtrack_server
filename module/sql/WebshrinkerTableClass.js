@@ -1,5 +1,6 @@
 const db = require('../lib/Db.js');
 const Core = require('../lib/Core.js');
+const Redis = require('redis');
 
 module.exports = class WebshrinkerTableClass extends Core{
 
@@ -41,5 +42,17 @@ module.exports = class WebshrinkerTableClass extends Core{
    */
   getAll(){
     return db.promiseQuery("SELECT * FROM `"+this.table+"`");
+  }
+
+  async loadRedis() {
+    let client = Redis.createClient({db: 2});
+    client.on("error", function (err) {
+      console.log("Error " + err);
+    });
+    let webshrinkercache = await this.getAll();
+    for (const record in webshrinkercache){
+      client.hmset(webshrinkercache[record].DOMAIN, 'RESPONSE', webshrinkercache[record].RESPONSE, 'TIMESTAMP', webshrinkercache[record].TIMESTAMP);
+    };
+    client.quit();
   }
 }

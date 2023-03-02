@@ -133,7 +133,7 @@ process.on('unhandledRejection', async (type, promise, reason) => {
 
 
 //checks if the control list is loaded to redis, if not, it populates it from controllist.csv
-redisLoader.checkIfEmpty();
+redisLoader.loadCL2RedisIfEmpty();
 
 
 module.exports = app;

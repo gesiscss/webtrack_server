@@ -1,5 +1,6 @@
 const db = require('../lib/Db.js');
 const Core = require('../lib/Core.js');
+const Redis = require('redis');
 
 module.exports = class WebshrinkerCategoryTableClass extends Core{
 
@@ -14,7 +15,8 @@ module.exports = class WebshrinkerCategoryTableClass extends Core{
    */
   async createTable(){
     await db.promiseQuery("CREATE TABLE IF NOT EXISTS `"+this.table+"` (`CATEGORY` VARCHAR(200) PRIMARY KEY, `CRITERIA` TEXT) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_german2_ci;");
-    return this.populateTable();
+    await this.populateTable();
+    return this.loadRedis();
   }
 
   populateTable(){
@@ -36,5 +38,18 @@ module.exports = class WebshrinkerCategoryTableClass extends Core{
    */
   getAll(){
     return db.promiseQuery("SELECT * FROM `"+this.table+"`");
+  }
+
+  async loadRedis() {
+    let client = Redis.createClient({db: 3});
+    client.on("error", function (err) {
+      console.log("Error " + err);
+    });
+    client.flushdb(); //clearing the controllist from redis on server installation
+    let categories = await this.getAll();
+    for (const record in categories){
+      client.set(categories[record].CATEGORY, categories[record].CRITERIA);
+    };
+    client.quit();
   }
 }//class
