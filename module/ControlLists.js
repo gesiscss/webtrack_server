@@ -58,18 +58,23 @@ class ControlLists {
                 //if not found in the control list db or the webshrinker cache we query the webshrinker API
                 console.log('Querying Webshrinker Service');
                 let WSresult = await WebshrinkerWrapper.queryWebshrinker(domain);
-                await this.webShrinkerTable.insert_or_update(domain, JSON.stringify(WSresult)); //adding the response to the cache table
-                let rows = await this.webShrinkerTable.get(domain);
-                this.redisClientWebShrinker.hmset(domain, {'response': rows[0].RESPONSE, 'timestamp': rows[0].TIMESTAMP});  //adding the response to the redis db. taking it from mysql to ensure the timestamp is identical
-                this.webShrinkerLogTable.insert(domain, JSON.stringify(WSresult)); //adding the response to the log table
-                //querying the category from the response in the category rules table
-                this.redisClientWebShrinker.hvals(domain, async (err, value) => {
-                  let category = JSON.parse(value[0]).data[0].categories[0].label;
-                  console.log('Category from WS: ', category)
-                  result = await this.queryCategory(category);
-                  console.log('result:', result);
-                  resolve(result);
-                });
+                if (WSresult !== undefined) {
+                  await this.webShrinkerTable.insert_or_update(domain, JSON.stringify(WSresult)); //adding the response to the cache table
+                  let rows = await this.webShrinkerTable.get(domain);
+                  this.redisClientWebShrinker.hmset(domain, {'response': rows[0].RESPONSE, 'timestamp': rows[0].TIMESTAMP});  //adding the response to the redis db. taking it from mysql to ensure the timestamp is identical
+                  this.webShrinkerLogTable.insert(domain, JSON.stringify(WSresult)); //adding the response to the log table
+                  //querying the category from the response in the category rules table
+                  this.redisClientWebShrinker.hvals(domain, async (err, value) => {
+                    let category = JSON.parse(value[0]).data[0].categories[0].label;
+                    console.log('Category from WS: ', category)
+                    result = await this.queryCategory(category);
+                    console.log('result:', result);
+                    resolve(result);
+                  });
+                } else {
+                  console.log('Webshrinker Error');
+                  resolve('full_deny'); //if can't get an answer from webshrinker resolve to full_deny (?)
+                }
               }
             });
           }

@@ -59,7 +59,6 @@ class WebshrinkerWrapper extends ConfigWebshrinker {
     })
     .catch((e) => {
       console.log(e)
-      //reject(e);
     });
     return data;
   }
