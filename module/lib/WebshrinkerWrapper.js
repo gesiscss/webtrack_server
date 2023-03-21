@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const util = require('util');
 const TextEncoder = util.TextEncoder;
+var log = require('./log.js');
 const fetch = require('node-fetch');
 
 var ConfigWebshrinker = require('./ConfigWebshrinker.js');
@@ -55,10 +56,12 @@ class WebshrinkerWrapper extends ConfigWebshrinker {
       if (response.ok) {
         return response.json();
       }
+      log.error(response.status);
       throw new Error(response.status);
     })
     .catch((e) => {
       console.log(e)
+      log.error(e);
     });
     return data;
   }
