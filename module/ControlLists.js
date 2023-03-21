@@ -19,71 +19,91 @@ class ControlLists {
     this.redisClientCategories = Redis.createClient({db: 3});
   }
 
+  get(client, domain) {
+    return new Promise(async (resolve, reject) => {
+      client.get(domain, async(err, value) => {
+        resolve(value);
+      });
+    });
+  }
+
+  hvals(client, domain) {
+    return new Promise(async (resolve, reject) => {
+      client.hvals(domain, async (err, value) => {
+        resolve(value);
+      });
+    });
+  }
+
+  remove_suffix(url) {
+    if (url.startsWith('www.')) {
+      return url.slice(4);
+    } else {
+      return url
+    }
+  }
+
   /**
    * [gets a domain and returns its flag: full_deny, full_allow, only_domain, only_url]
    * @param  {Object} request
    * @return {Promise}
    */
-  queryURL(request) {
-    return new Promise(async (resolve, reject) => {
+  async queryURL(request) {
       try {
         var result;
         //checks if the url contains 'www' and removes it if it does
         let url = request.body.domain;
-        if (url.startsWith('www.')){
-          var domain = url.slice(4);
-        } else {
-          var domain = url;
-        }
+        var domain = this.remove_suffix(url);
         //first check is in the redis control list database (which is populated from the csv file)
-        this.redisClientControlList.get(domain, async (err, value) => {
-          if (value !== null) {
-            result = value;
-            console.log('found in Control-List');
+        const CLresult = await this.get(this.redisClientControlList, domain);
+        if (CLresult !== null) {
+          result = CLresult;
+          console.log('found in Control-List');
+          console.log('result:', result);
+          return result;
+        } else {
+          //second check is in the redis webshrinker cache database 
+          const WScacheResult = await this.hvals(this.redisClientWebShrinker, domain);
+          if (WScacheResult.length !== 0 && new Date() - new Date(Date.parse(WScacheResult[1])) < this.cacheExpiration) {   //check if domain is in cache table AND if record is not older than 90 days
+            console.log('found in WebShrinker cache table');
+            let category = WScacheResult[0];
+            console.log('Category: ', category);
+            //if found in webshrinker cache db we check the rule for the category in the categories db
+            result = await this.queryCategory(category);
             console.log('result:', result);
-            resolve(result);
+            return result;
           } else {
-            //second check is in the redis webshrinker cache database 
-            this.redisClientWebShrinker.hvals(domain, async (err, value) => {
-              if (value.length !== 0 && new Date() - new Date(Date.parse(value[1])) < this.cacheExpiration) {   //check if domain is in cache table AND if record is not older than 90 days
-                console.log('found in WebShrinker cache table');
-                let response = value[0];
-                let category = JSON.parse(response).data[0].categories[0].label;
-                console.log('Category: ', category);
-                //if found in webshrinker cache db we check the rule for the category in the categories db
+            //if not found in the control list db or the webshrinker cache we query the webshrinker API
+            console.log('Querying Webshrinker Service');
+            let WSresult = await WebshrinkerWrapper.queryWebshrinker(domain);
+            console.log(WSresult.data[0]);
+            if (WSresult !== undefined) {
+              let response_string = JSON.stringify(WSresult);
+              this.webShrinkerTable.insert_or_update(domain, response_string); //adding the response to the cache table
+              this.webShrinkerLogTable.insert(domain, response_string); //adding the response to the log table
+              let category = WSresult.data[0].categories[0].label;
+              this.redisClientWebShrinker.hmset(domain, {'CATEGORY': category, 'TIMESTAMP': new Date()}); //adding the category to the redis db. note that timestamp may differ slightly between the mySQL DB and the Redis DB
+              //querying the category from the response in the category rules table
+              console.log('Category from WS: ', category)
+              result = await this.queryCategory(category);
+              console.log('result:', result);
+              return result;
+            } else {
+              console.log('Webshrinker Error');
+              if (WScacheResult.length !== 0) {
+                let category = WScacheResult[0];
                 result = await this.queryCategory(category);
-                console.log('result:', result);
-                resolve(result);
+                return result;
               } else {
-                //if not found in the control list db or the webshrinker cache we query the webshrinker API
-                console.log('Querying Webshrinker Service');
-                let WSresult = await WebshrinkerWrapper.queryWebshrinker(domain);
-                if (WSresult !== undefined) {
-                  await this.webShrinkerTable.insert_or_update(domain, JSON.stringify(WSresult)); //adding the response to the cache table
-                  let rows = await this.webShrinkerTable.get(domain);
-                  this.redisClientWebShrinker.hmset(domain, {'response': rows[0].RESPONSE, 'timestamp': rows[0].TIMESTAMP});  //adding the response to the redis db. taking it from mysql to ensure the timestamp is identical
-                  this.webShrinkerLogTable.insert(domain, JSON.stringify(WSresult)); //adding the response to the log table
-                  //querying the category from the response in the category rules table
-                  this.redisClientWebShrinker.hvals(domain, async (err, value) => {
-                    let category = JSON.parse(value[0]).data[0].categories[0].label;
-                    console.log('Category from WS: ', category)
-                    result = await this.queryCategory(category);
-                    console.log('result:', result);
-                    resolve(result);
-                  });
-                } else {
-                  console.log('Webshrinker Error');
-                  resolve('full_deny'); //if can't get an answer from webshrinker resolve to full_deny (?)
-                }
+                return 'full_deny'; //if can't get an answer from webshrinker resolve to full_deny
               }
-            });
+            }
           }
-        });
+        }
       } catch (e) {
         console.error(e);
         reject(e)
       }
-    });
   }
 
   /**

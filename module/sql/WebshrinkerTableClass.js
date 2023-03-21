@@ -51,7 +51,9 @@ module.exports = class WebshrinkerTableClass extends Core{
     });
     let webshrinkercache = await this.getAll();
     for (const record in webshrinkercache){
-      client.hmset(webshrinkercache[record].DOMAIN, 'RESPONSE', webshrinkercache[record].RESPONSE, 'TIMESTAMP', webshrinkercache[record].TIMESTAMP);
+      let response = JSON.parse(webshrinkercache[record].RESPONSE);
+      let category = response['data'][0]['categories'][0]['label'];
+      client.hmset(webshrinkercache[record].DOMAIN, 'CATEGORY', category, 'TIMESTAMP', webshrinkercache[record].TIMESTAMP);
     };
     client.quit();
   }
