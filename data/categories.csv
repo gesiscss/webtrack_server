@@ -1,5 +1,6 @@
 category,criteria
 Adult Content,full_deny
+Adult,full_deny
 Economy and Finance,full_deny
 Gambling,only_url
 Real Estate,only_domain
