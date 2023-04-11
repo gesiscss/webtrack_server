@@ -14,7 +14,10 @@ class WebshrinkerWrapper extends ConfigWebshrinker {
     this.init();
   }
 
-
+  /**
+   * [loads the webshrinker credentials from the webshrinker configuration file]
+   * @return {Promise}
+   */
   init() {
     return new Promise(async (resolve, reject)=>{
       try {
@@ -32,10 +35,10 @@ class WebshrinkerWrapper extends ConfigWebshrinker {
 
 
   /**
-  * [queries the webshrinker API for domain category]
-  * @param  {String} domain
-  * @return {Promise}
-  */
+   * [queries the webshrinker API for domain category]
+   * @param  {String} domain
+   * @return {Promise}
+   */
   async queryWebshrinker(domain) {
 
     let ACCESS_KEY = this.credentials.ACCESS_KEY;

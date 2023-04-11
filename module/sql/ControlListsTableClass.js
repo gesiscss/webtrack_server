@@ -10,7 +10,7 @@ module.exports = class ControlListsTableClass extends Core{
   }
 
   /**
-   * [createTable create table]
+   * [createTable create table, populates it from controllist.csv and loads it into redis db 1]
    * @return {Promise}
    */
   async createTable(){
@@ -19,6 +19,10 @@ module.exports = class ControlListsTableClass extends Core{
     return this.loadRedis();
   }
 
+  /**
+   * [populates table from csv file]
+   * @return {Promise}
+   */
   populateTable(){
     return db.promiseQuery("LOAD DATA LOCAL INFILE 'data/controllist.csv' INTO TABLE `"+this.table+"` FIELDS TERMINATED BY ',' IGNORE 1 ROWS;");
   }
@@ -40,6 +44,10 @@ module.exports = class ControlListsTableClass extends Core{
     return db.promiseQuery("SELECT * FROM `"+this.table+"`");
   }
 
+  /**
+   * [load the table into redis db]
+   * @return {Promise}
+   */
   async loadRedis() {
     let client = Redis.createClient({db: 1});
     client.on("error", function (err) {

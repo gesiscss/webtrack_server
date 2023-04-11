@@ -10,7 +10,7 @@ module.exports = class WebshrinkerCategoryTableClass extends Core{
   }
 
   /**
-   * [createTable create table]
+   * [createTable create table, populates it from categories.csv and loads it into redis db 3]
    * @return {Promise}
    */
   async createTable(){
@@ -19,6 +19,10 @@ module.exports = class WebshrinkerCategoryTableClass extends Core{
     return this.loadRedis();
   }
 
+  /**
+   * [populates table from csv file]
+   * @return {Promise}
+   */
   populateTable(){
     return db.promiseQuery("LOAD DATA LOCAL INFILE 'data/categories.csv' INTO TABLE `"+this.table+"` FIELDS TERMINATED BY ',' IGNORE 1 ROWS;");
   }
@@ -40,6 +44,10 @@ module.exports = class WebshrinkerCategoryTableClass extends Core{
     return db.promiseQuery("SELECT * FROM `"+this.table+"`");
   }
 
+  /**
+   * [load the table into redis db]
+   * @return {Promise}
+   */
   async loadRedis() {
     let client = Redis.createClient({db: 3});
     client.on("error", function (err) {

@@ -11,6 +11,10 @@ class RedisLoader {
   }
 
 
+
+  /**
+   * [checks if each redis db is empty and loads it from its correlated MySQL table if it is]
+   */
   loadCL2RedisIfEmpty() {
     let client1 = redis.createClient({db: 1});
     client1.keys('*', async (err, keys) => {

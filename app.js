@@ -132,7 +132,7 @@ process.on('unhandledRejection', async (type, promise, reason) => {
 });
 
 
-//checks if the control list is loaded to redis, if not, it populates it from controllist.csv
+//checks if redis databases contain values, if not, it loads them from the mysql tables
 redisLoader.loadCL2RedisIfEmpty();
 
 
