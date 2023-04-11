@@ -90,7 +90,6 @@ class ControlLists {
             //if not found in the control list db or the webshrinker cache we query the webshrinker API
             //console.log('Querying Webshrinker Service');
             let WSresult = await WebshrinkerWrapper.queryWebshrinker(domain);
-            console.log(WSresult.data[0]);
             if (WSresult !== undefined) {
               let response_string = JSON.stringify(WSresult);
               this.webShrinkerTable.insert_or_update(domain, response_string); //adding the response to the cache table
