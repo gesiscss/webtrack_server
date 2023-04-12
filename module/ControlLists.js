@@ -75,30 +75,23 @@ class ControlLists {
         const CLresult = await this.get(this.redisClientControlList, domain);
         if (CLresult !== null) {
           result = CLresult;
-          //console.log('found in Control-List');
-          //console.log('result:', result);
           return result;
         } else {
           //second check is in the redis webshrinker cache database 
           const WScacheResult = await this.hvals(this.redisClientWebShrinker, domain);
           if (WScacheResult.length !== 0 && new Date() - new Date(Date.parse(WScacheResult[1])) < this.cacheExpiration) {   //check if domain is in cache table AND if record is not older than 90 days
-            //console.log('Found in Webshrinker cache');
             result = WScacheResult[2];
-            //console.log('result:', result);
             return result;
           } else {
             //if not found in the control list db or the webshrinker cache we query the webshrinker API
-            //console.log('Querying Webshrinker Service');
             let WSresult = await WebshrinkerWrapper.queryWebshrinker(domain);
             if (WSresult !== undefined) {
               let response_string = JSON.stringify(WSresult);
               this.webShrinkerTable.insert_or_update(domain, response_string); //adding the response to the cache table
               this.webShrinkerLogTable.insert(domain, response_string); //adding the response to the log table
               result = await this.webShrinkerTable.restrictiveCriteria(this.redisClientWebShrinker, WSresult, domain, new Date());
-              //console.log('result:', result);
               return result;
             } else {
-              //console.log('Webshrinker Error');
               if (WScacheResult.length !== 0) {
                 result = WScacheResult[2];
                 return result;
