@@ -22,11 +22,8 @@ class RedisLoader {
         console.error(err);
         client1.quit();
       } else if (keys.length === 0) {
-        console.log('Control list not loaded to redis');
         await this.controlListTable.loadRedis();
-        console.log('Control List loading completed')
       } else {
-        console.log(`Database has ${keys.length} keys`);
         client1.quit();
       }
     });
@@ -37,11 +34,8 @@ class RedisLoader {
         console.error(err);
         client2.quit();
       } else if (keys.length === 0) {
-        console.log('webshrinker cache not loaded to redis')
         await this.webShrinkerTable.loadRedis();
-        console.log('webshrinker cache loading completed')
       } else {
-        console.log(`Database has ${keys.length} keys`);
         client2.quit();
       }
     });
@@ -52,11 +46,8 @@ class RedisLoader {
         console.error(err);
         client3.quit();
       } else if (keys.length === 0) {
-        console.log('Categories rules not loaded to redis');
         await this.webShrinkerCategoryTable.loadRedis();
-        console.log('Categories rules loading completed')
       } else {
-        console.log(`Database has ${keys.length} keys`);
         client3.quit();
       }
     });
