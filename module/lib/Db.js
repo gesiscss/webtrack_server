@@ -104,7 +104,8 @@ class MYSQLWrapper extends Config{
               password: config.MYSQL_PASSWORD,
               database: config.MYSQL_DATABASE,
               charset: "utf8mb4_german2_ci",
-              typeCast: this._typeCast
+              typeCast: this._typeCast,
+              localInfile: true
             }
             this.pool = mysql.createPool(this._credentials);
             this.init = config.hasOwnProperty('INSTALL') && config.INSTALL? true: false;
