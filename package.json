@@ -53,6 +53,7 @@
     "nodemon": "^2.0.2",
     "openssl-wrapper": "^0.3.4",
     "rate-limit-redis": "^1.7.0",
+    "redis": "^2.8.0",
     "rimraf": "^2.6.3",
     "sanitize-html": "^1.20.0",
     "schema-inspector": "^1.6.8",
