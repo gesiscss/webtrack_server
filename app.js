@@ -53,7 +53,6 @@ var banner = require('./module/Limiter').banner;
 var redisLoader = require('./module/ControlListsRedisLoader');
 
 setTimeout(function () {
-  var cron = require('./module/Cronjob');
   var downloadProject = require('./module/DownloadProject');
   downloadProject.onStart();
 }, 1000);

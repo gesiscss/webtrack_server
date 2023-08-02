@@ -4,7 +4,6 @@ var project = require('../module/Project.js');
 var download = require('../module/DownloadProject.js');
 var schema = require('../schema/project.js');
 var io = require('../module/IOHandler.js').io;
-var cron = require('../module/Cronjob');
 
 router.post('/add', schema.get('add'), io((r, io) => {
     console.log('test');
@@ -121,11 +120,6 @@ router.post('/client/change', schema.get('client_change'), io((r, io) => {
 
 router.post('/client/clean', schema.get('client_clean'), io((r, io) => {
     project.cleanClient(r.id, r.body.id).then(io.res).catch(io.resError);
-}));
-
-router.post('/storage/update', schema.get('is_id'), io(async (r, io) => {
-    await project._checkPermission(r.id, r.body.id);
-    cron.storage(r.body.id, 0).then(io.res).catch(io.resError);
 }));
 
 

@@ -6,10 +6,6 @@ var settings = require('../module/Settings.js');
 var urllist = require('../module/Urllist.js');
 const log = require('./lib/log');
 
-var sd2p  = require('../module/StorageDestination2Project.js');
-var storage = {
-  aws: require('../module/Aws')
-}
 
 var extensionsfilter = {
   "js":     ['js'],
@@ -61,10 +57,6 @@ class PublicClient extends Client{
                 project.SETTINGS.EXTENSIONSFILTER = extensions;
             }
 
-            if(project.SETTINGS.STORAGE_DESTINATION){
-              let [destination, id] = await sd2p.get(project.ID);
-              project.SETTINGS.STORAGE_DESTINATION = await storage[destination].getPublicSettings(id);
-            }
             result.push(project);
           }//for
           // console.log(result);

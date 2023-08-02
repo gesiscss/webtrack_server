@@ -14,22 +14,6 @@ router.post('/changeValue', schema.get('changeValue'), io((r, io) => {
     settings.changeValue(r.id, r.body.project_id, r.body.id, r.body.value).then(io.res).catch(io.resError);
 }));
 
-router.post('/storage/set', schema.get('storage_set'), io((r, io) => {
-    settings.storage_set(r.id, r.body.project_id, r.body.destination, r.body.credentials).then(io.res).catch(io.resError);
-}));
-
-router.post('/storage/get', schema.get('storage'), io((r, io) => {
-    settings.storage_get(r.id, r.body.project_id).then(io.res).catch(io.resError);
-}));
-
-router.post('/storage/remove', schema.get('storage'), io((r, io) => {
-    settings.storage_remove(r.id, r.body.project_id).then(io.res).catch(io.resError);
-}));
-
-router.post('/storage/change', schema.get('storage_change'), io((r, io) => {
-    settings.storage_change(r.id, r.body.project_id, r.body.settings).then(io.res).catch(io.resError);
-}));
-
 router.post('/get', schema.get('get'), io((r, io) => {
     settings.get(r.id, r.body.project_id).then(io.res).catch(io.resError);
 }));

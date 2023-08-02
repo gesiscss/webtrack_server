@@ -153,51 +153,5 @@ module.exports = new Schema({
   },
 
 
-  storage: {
-    body: {
-      type: 'object',
-      required: ['project_id'],
-      properties: {
-        project_id: {
-           type: 'number'
-        }
-      }
-    }
-  },
-
-  storage_set: {
-    body: {
-      type: 'object',
-      required: ['project_id', 'destination', 'credentials'],
-      properties: {
-        project_id: {
-           type: 'number'
-        },
-        destination: {
-           type: 'string'
-        },
-        credentials: {
-          type: 'object'
-        }
-      }
-    }
-  },
-
-  storage_change: {
-    body: {
-      type: 'object',
-      required: ['project_id', 'settings'],
-      properties: {
-        project_id: {
-           type: 'number'
-        },
-        settings: {
-           type: 'object'
-        }
-      }
-    }
-  }
-
-
 
 });
