@@ -1,7 +1,6 @@
 "use strict";
 var Client = require('../module/Client.js').Class
 var project = require('../module/Project.js');
-var schedule = require('../module/Schedule.js');
 var settings = require('../module/Settings.js');
 var urllist = require('../module/Urllist.js');
 const log = require('./lib/log');
@@ -38,9 +37,6 @@ class PublicClient extends Client{
           var result = [];
           let urlLists = await urllist._getListforProject(projects.map(e => e.ID));
           for (let project of projects) {
-
-            project.SCHEDULE = project.SCHEDULE? await schedule.fetch(project.ID) : false;
-            if(Object.keys(project.SCHEDULE).length==0) project.SCHEDULE = false;
 
             project.SETTINGS = await settings.fetch(project.ID);
             project.URLLIST = urlLists[project.ID];

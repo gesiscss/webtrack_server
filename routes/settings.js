@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var urllist = require('../module/Urllist.js');
 var settings = require('../module/Settings.js');
-var schedule = require('../module/Schedule.js');
 var schema = require('../schema/settings.js');
 var io = require('../module/IOHandler.js').io;
 
@@ -40,18 +39,6 @@ router.post('/urllist/getCount', schema.get('urllist_is_project_id'), io((r, io)
 
 router.post('/urllist/clean', schema.get('urllist_is_project_id'), io((r, io) => {
     urllist.clean(r.id, r.body.project_id).then(io.res).catch(io.resError);
-}));
-
-router.post('/schedule/get', schema.get('schedule_is_project_id'), io((r, io) => {
-    schedule.get(r.id, r.body.project_id).then(io.res).catch(io.resError);
-}));
-
-router.post('/schedule/set', schema.get('schedule_set'), io((r, io) => {
-   schedule.set(r.id, r.body.project_id, r.body.options).then(io.res).catch(io.resError);
-}));
-
-router.post('/schedule/remove', schema.get('schedule_is_project_id'), io((r, io) => {
-    schedule.remove(r.id, r.body.project_id).then(io.res).catch(io.resError);
 }));
 
 

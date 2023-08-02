@@ -122,35 +122,7 @@ module.exports = new Schema({
         }
       }
     }
-  },
-
-
-  schedule_is_project_id: {
-    body: {
-      type: 'object',
-      required: ['project_id'],
-      properties: {
-        project_id: {
-           type: 'number'
-        }
-      }
-    }
-  },
-
-  schedule_set: {
-    body: {
-      type: 'object',
-      required: ['project_id', 'options'],
-      properties: {
-        project_id: {
-           type: 'number'
-        },
-        options: {
-           type: 'object'
-        }
-      }
-    }
-  },
+  }
 
 
 
