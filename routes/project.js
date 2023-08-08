@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var project = require('../module/Project.js');
-var download = require('../module/DownloadProject.js');
 var schema = require('../schema/project.js');
 var io = require('../module/IOHandler.js').io;
 
@@ -80,22 +79,6 @@ router.post('/changeUserPermission', schema.get('permissionParameter'), io((r, i
 
 router.post('/getColumns', schema.get('getColumns'), io((r, io) => {
     project.getColumns(r.id, r.body.project_id).then(io.res).catch(io.resError);
-}));
-
-router.post('/download/add', schema.get('download_add'), io((r, io) => {
-    download.add(r.id, r.body.project_id, r.body.filter_ids, r.body.level).then(io.res).catch(io.resError);
-}));
-
-router.post('/download/get', schema.get('download_get'), io((r, io) => {
-    download.getFile(r.id, r.body.project_id, r.body.id).then(io.res).catch(io.resError);
-}));
-
-router.post('/download/delete', schema.get('download_get'), io((r, io) => {
-    download.delete(r.id, r.body.project_id, r.body.id).then(io.res).catch(io.resError);
-}));
-
-router.post('/download/list', schema.get('download_getList'), io((r, io) => {
-    download.getList(r.id, r.body.project_id).then(io.res).catch(io.resError);
 }));
 
 router.post('/client/get', schema.get('client_get'), io((r, io) => {

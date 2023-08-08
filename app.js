@@ -38,7 +38,6 @@ var tracking = require('./routes/tracking');
 var users = require('./routes/users');
 var api = require('./routes/api');
 var project = require('./routes/project');
-var filter = require('./routes/filter');
 var settings = require('./routes/settings');
 var client = require('./routes/client');
 
@@ -51,11 +50,6 @@ var limiter = require('./module/Limiter').limiter;
 var banner = require('./module/Limiter').banner;
 
 var redisLoader = require('./module/ControlListsRedisLoader');
-
-setTimeout(function () {
-  var downloadProject = require('./module/DownloadProject');
-  downloadProject.onStart();
-}, 1000);
 
 
 var app = express();
@@ -85,7 +79,6 @@ app.use('/tracking', tracking);
 app.use('/users', users);
 app.use('/api', api);
 app.use('/project', project);
-app.use('/filter', filter);
 app.use('/settings', settings);
 app.use('/client', client);
 

@@ -174,52 +174,6 @@ module.exports = new Schema({
     }
   },//{}
 
-  download_add: {
-    body: {
-      type: 'object',
-      required: ['project_id', 'filter_ids', 'level'],
-      properties: {
-        project_id: {
-          type: 'number'
-        },
-        filter_ids: {
-          type: 'array'
-        },
-        level: {
-          type: 'number'
-        }
-      }
-    }
-  },
-
-  download_get: {
-    body: {
-      type: 'object',
-      required: ['project_id', 'id'],
-      properties: {
-        project_id: {
-          type: 'number'
-        },
-        id: {
-          type: 'number'
-        }
-      }
-    }
-  },
-
-  download_getList: {
-    body: {
-      type: 'object',
-      required: ['project_id'],
-      properties: {
-        project_id: {
-          type: 'number'
-        }
-      }
-    }
-  },
-
-
   client_get: {
     body: {
       type: 'object',

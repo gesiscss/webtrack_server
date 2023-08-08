@@ -1,6 +1,5 @@
 "use strict";
 const Page = require('./Page.js');
-const SubProcess = require('./lib/SubProcess.js');
 const queue = require('./lib/SaveQueue.js');
 const client = require('./Client.js').client;
 const settings = require('./Settings.js');
