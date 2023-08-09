@@ -9,7 +9,6 @@ var users = require('../module/users.js');
 var client = require('../module/Client.js').client;
 var dataPage = require('../module/DataPage.js');
 var u2p = require('../module/Users2Project.js');
-var events2page = require('../module/Events2Page.js');
 
 var ProjektTableClass = require('./sql/ProjektTableClass.js')
 
@@ -256,43 +255,6 @@ class Projekt extends ProjektTableClass{
   }
 
   /**
-   * [getPageEvents return list of events from page]
-   * @param  {Integer} user_id
-   * @param  {Integer} project_id
-   * @param  {Integer} page_id
-   * @return {Promise} Array
-   */
-  getPageEvents(user_id, project_id, page_id){
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this._checkPermission(user_id, project_id);
-        resolve(await events2page.get(page_id));
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  /**
-   * [deletePageEvent delete event entry from page]
-   * @param  {Integer} user_id
-   * @param  {Integer} project_id
-   * @param  {Integer} page_id
-   * @param  {Integer} event_id
-   * @return {Promise} Boolean
-   */
-  deletePageEvent(user_id, project_id, page_id, event_id){
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this._checkPermission(user_id, project_id);
-        resolve(await events2page.removeEvent(page_id, event_id));
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  /**
    * [getPageVersions returns a list of versions of a page]
    * @param  {Integer} user_id
    * @param  {Integer} project_id
@@ -339,7 +301,6 @@ class Projekt extends ProjektTableClass{
 
               await page.delete(page_id);
               await dataPage.deletePage(page_id);
-              await events2page.remove(page_id);
 
             }
           }

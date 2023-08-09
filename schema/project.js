@@ -63,39 +63,6 @@ module.exports = new Schema({
     }
   },
 
-  deletePageEvent: {
-    body: {
-      type: 'object',
-      required: ['id', 'page_id', 'event_id'],
-      properties: {
-        id: {
-          type: 'number'
-        },
-        page_id: {
-          type: 'number'
-        },
-        event_id: {
-           type: 'number'
-        }
-      }
-    }
-  },
-
-  getPageVersions: {
-    body: {
-      type: 'object',
-      required: ['id', 'page_id'],
-      properties: {
-        id: {
-            type: 'number'
-        },
-        page_id: {
-            type: 'number'
-        }
-      }
-    }
-  },
-
   deletePage: {
     body: {
       type: 'object',

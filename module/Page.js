@@ -3,7 +3,6 @@ var client = require('../module/Client.js').client;
 var moment = require('moment');
 var minify = require('html-minifier').minify;
 var dataPage = require('../module/DataPage.js');
-var events2page = require('../module/Events2Page.js');
 var log = require('../module/lib/log');
 var PageTableClass = require('./sql/PageTableClass.js');
 
@@ -133,8 +132,6 @@ class Page extends PageTableClass{
           //let children = await this.hasPageClient_PrecursorId(client_id, p.id);
           //await this.setPrecursorId(children, insertId);
 
-          for (let event of p.events) await events2page.add(insertId, event)
-
           ////////////////
           // WRITE HTML //
           ////////////////
@@ -238,10 +235,6 @@ class Page extends PageTableClass{
     return new Promise(async (resolve, reject)=>{
       try {
         let rows = await super.getClientPages(project_id, client_id);
-        let counts = await events2page.getCounts(rows.map(e => e.ID));
-        for (let page of rows) {
-          page.countEvents = counts.hasOwnProperty(page.ID.toString())? counts[page.ID]: 0;
-        }
         resolve(rows)
       } catch (e) {
         reject(e)

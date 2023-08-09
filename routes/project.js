@@ -37,14 +37,6 @@ router.post('/getClientPages', schema.get('getClientPages'), io((r, io) => {
     project.getClientPages(r.id, r.body.id, r.body.client_id).then(io.res).catch(io.resError);
 }));
 
-router.post('/getPageEvents', schema.get('getPageVersions'), io((r, io) => {
-    project.getPageEvents(r.id, r.body.id, r.body.page_id).then(io.res).catch(io.resError);
-}));
-
-router.post('/deletePageEvent', schema.get('deletePageEvent'), io((r, io) => {
-    project.deletePageEvent(r.id, r.body.id, r.body.page_id, r.body.event_id).then(io.res).catch(io.resError);
-}));
-
 router.post('/getPageVersions', schema.get('getPageVersions'), io((r, io) => {
     project.getPageVersions(r.id, r.body.id, r.body.page_id).then(io.res).catch(io.resError);
 }));
