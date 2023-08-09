@@ -78,24 +78,6 @@ module.exports = new Schema({
     }
   },
 
-  pageContentParameter: {
-    body: {
-      type: 'object',
-      required: ['id', 'page_id', 'version'],
-      properties: {
-        id: {
-            type: 'number'
-        },
-        page_id: {
-            type: 'number'
-        },
-        version: {
-            type: 'number'
-        }
-      }
-    }
-  },
-
   permissionParameter: {
     body: {
       type: 'object',

@@ -37,20 +37,8 @@ router.post('/getClientPages', schema.get('getClientPages'), io((r, io) => {
     project.getClientPages(r.id, r.body.id, r.body.client_id).then(io.res).catch(io.resError);
 }));
 
-router.post('/getPageVersions', schema.get('getPageVersions'), io((r, io) => {
-    project.getPageVersions(r.id, r.body.id, r.body.page_id).then(io.res).catch(io.resError);
-}));
-
 router.post('/deletePage', schema.get('deletePage'), io((r, io) => {
     project.deletePage(r.id, r.body.id, r.body.page_ids).then(io.res).catch(io.resError);
-}));
-
-router.post('/getPageContent', schema.get('pageContentParameter'), io((r, io) => {
-    project.getPageContent(r.id, r.body.id, r.body.page_id, r.body.version).then(io.res).catch(io.resError);
-}));
-
-router.post('/deletePageContent', schema.get('pageContentParameter'), io((r, io) => {
-    project.deletePageContent(r.id, r.body.id, r.body.page_id, r.body.version).then(io.res).catch(io.resError);
 }));
 
 router.post('/getPermissions', schema.get('is_id'), io((r, io) => {

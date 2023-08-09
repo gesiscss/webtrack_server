@@ -7,7 +7,6 @@ const Page = require('../module/Page.js');
 const page = new Page();
 var users = require('../module/users.js');
 var client = require('../module/Client.js').client;
-var dataPage = require('../module/DataPage.js');
 var u2p = require('../module/Users2Project.js');
 
 var ProjektTableClass = require('./sql/ProjektTableClass.js')
@@ -255,30 +254,6 @@ class Projekt extends ProjektTableClass{
   }
 
   /**
-   * [getPageVersions returns a list of versions of a page]
-   * @param  {Integer} user_id
-   * @param  {Integer} project_id
-   * @param  {Integer} page_id
-   * @return {Array}
-   */
-  getPageVersions(user_id, project_id, page_id){
-    return new Promise(async (resolve, reject) => {
-      try {
-
-        await this._checkPermission(user_id, project_id);
-        let b = await page.check(page_id);
-        if(b)
-          dataPage.getVersions(page_id).then(resolve).catch(reject);
-        else
-          reject('Page-ID not found');
-      } catch (e) {
-        console.log(e);
-        reject(e)
-      }
-    });
-  }
-
-  /**
    * [deletePage deletes a page with its associated page versions (data's)]
    * @param  {Integer} user_id
    * @param  {Array} page_ids
@@ -300,7 +275,6 @@ class Projekt extends ProjektTableClass{
               if(children.length>0) await page.setPrecursorId(children, p.PRECURSOR_ID);
 
               await page.delete(page_id);
-              await dataPage.deletePage(page_id);
 
             }
           }
@@ -313,60 +287,6 @@ class Projekt extends ProjektTableClass{
       }
     });
   }
-
-
-  /**
-   * [getPageContent get HTML-content]
-   * @param  {Integer} user_id
-   * @param  {Integer} project_id
-   * @param  {Integer} page_id
-   * @param  {Integer} version
-   * @return {String}
-   */
-  getPageContent(user_id, project_id, page_id, version){
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this._checkPermission(user_id, project_id);
-        if(await page.check(page_id)){
-          if(await dataPage.isVersion(page_id, version))
-            dataPage.getPageVersion(page_id, version, '1').then(resolve).catch(reject)
-          else
-            reject('Page-Version not found');
-        }else
-          reject('Page-ID not found');
-      } catch (e) {
-        console.log(e);
-        reject(e)
-      }
-    });
-  }
-
-  /**
-   * [deletePageContent delete the Page-content-version]
-   * @param  {Integer} user_id
-   * @param  {Integer} project_id
-   * @param  {Integer} page_id
-   * @param  {Integer} version
-   * @return {Boolean}
-   */
-  deletePageContent(user_id, project_id, page_id, version){
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this._checkPermission(user_id, project_id, true);
-        if(await page.check(page_id)){
-          if(await dataPage.isVersion(page_id, version)){
-            dataPage.delete(page_id, version).then(resolve).catch(reject);
-          }else
-            reject('Page-Version not found');
-        }else
-          reject('Page-ID not found')
-      } catch (e) {
-        console.log(e);
-        reject(e)
-      }
-    });
-  }
-
 
   /**
    * [getPermissions checked the permisson of User-ID and return all user have access to the project]

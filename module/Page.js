@@ -2,7 +2,6 @@
 var client = require('../module/Client.js').client;
 var moment = require('moment');
 var minify = require('html-minifier').minify;
-var dataPage = require('../module/DataPage.js');
 var log = require('../module/lib/log');
 var PageTableClass = require('./sql/PageTableClass.js');
 
