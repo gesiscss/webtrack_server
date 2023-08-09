@@ -2,7 +2,6 @@
 var Client = require('../module/Client.js').Class
 var project = require('../module/Project.js');
 var settings = require('../module/Settings.js');
-var urllist = require('../module/Urllist.js');
 const log = require('./lib/log');
 
 
@@ -35,11 +34,9 @@ class PublicClient extends Client{
           resolve([]);
         else{
           var result = [];
-          let urlLists = await urllist._getListforProject(projects.map(e => e.ID));
           for (let project of projects) {
 
             project.SETTINGS = await settings.fetch(project.ID);
-            project.URLLIST = urlLists[project.ID];
 
             if(project.SETTINGS.EXTENSIONSFILTER.hasOwnProperty('all') && project.SETTINGS.EXTENSIONSFILTER.all === true){
                 project.SETTINGS.EXTENSIONSFILTER = ['ALL'];
