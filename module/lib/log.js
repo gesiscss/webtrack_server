@@ -2,7 +2,6 @@ const log2File = require('log-to-file');
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
-const errorMailer = require('./ErrorMailer');
 
 class Log {
 
@@ -84,9 +83,6 @@ class Log {
       msg = err;
     }
     this.errorLog(msg);
-    if(this._checkErrorMsg(msg)){
-      if(!global.debug) errorMailer.sendMail(msg);
-    }
 
   }
 

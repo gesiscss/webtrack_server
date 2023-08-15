@@ -44,8 +44,6 @@ var client = require('./routes/client');
 var ioError = require('./module/IOHandler').error;
 var log = require('./module/lib/log');
 
-var errorMailer = require('./module/lib/ErrorMailer');
-
 var limiter = require('./module/Limiter').limiter;
 var banner = require('./module/Limiter').banner;
 
