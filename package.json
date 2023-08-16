@@ -20,8 +20,6 @@
     "debug": "nodemon --inspect --max-old-space-size=2048 ./bin/www  APPDEBUG=1"
   },
   "dependencies": {
-    "archiver": "^3.0.0",
-    "aws-sdk": "^2.327.0",
     "bee-queue": "^1.2.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
@@ -47,17 +45,14 @@
     "navigator": "^1.0.1",
     "node-cache": "^4.2.0",
     "node-fetch": "^2.6.7",
-    "nodemailer": "^5.1.1",
     "nodemon": "^2.0.2",
     "openssl-wrapper": "^0.3.4",
     "rate-limit-redis": "^1.7.0",
     "redis": "^2.8.0",
     "rimraf": "^2.6.3",
-    "sanitize-html": "^1.20.0",
     "schema-inspector": "^1.6.8",
     "serve-favicon": "~2.4.2",
     "stream-buffers": "^3.0.2",
-    "striptags": "^3.1.1",
     "unzip": "^0.1.11",
     "valid-url": "^1.0.9",
     "window": "^4.2.5"
