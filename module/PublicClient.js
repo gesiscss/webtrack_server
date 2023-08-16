@@ -37,18 +37,7 @@ class PublicClient extends Client{
           for (let project of projects) {
 
             project.SETTINGS = await settings.fetch(project.ID);
-
-            if(project.SETTINGS.EXTENSIONSFILTER.hasOwnProperty('all') && project.SETTINGS.EXTENSIONSFILTER.all === true){
-                project.SETTINGS.EXTENSIONSFILTER = ['ALL'];
-            }else{
-                let extensions = [];
-                for (let name in project.SETTINGS.EXTENSIONSFILTER) {
-                  if(project.SETTINGS.EXTENSIONSFILTER[name]===true){
-                    extensions = extensions.concat(extensionsfilter[name]);
-                  }
-                }
-                project.SETTINGS.EXTENSIONSFILTER = extensions;
-            }
+            project.SETTINGS.EXTENSIONSFILTER = [];
 
             result.push(project);
           }//for
