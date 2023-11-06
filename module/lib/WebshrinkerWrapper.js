@@ -59,7 +59,7 @@ class WebshrinkerWrapper extends ConfigWebshrinker {
       if (response.ok) {
         return response.json();
       }
-      log.error(response.status);
+      log.error(domain, response.status);
       throw new Error(response.status);
     })
     .catch((e) => {
