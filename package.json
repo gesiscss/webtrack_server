@@ -55,6 +55,6 @@
     "stream-buffers": "^3.0.2",
     "unzip": "^0.1.11",
     "valid-url": "^1.0.9",
-    "window": "^4.2.5"
+    "window": "^4.2.7"
   }
 }
