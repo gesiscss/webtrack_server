@@ -45,7 +45,7 @@
     "navigator": "^1.0.1",
     "node-cache": "^4.2.0",
     "node-fetch": "^2.6.7",
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.22",
     "openssl-wrapper": "^0.3.4",
     "rate-limit-redis": "^1.7.0",
     "redis": "^2.8.0",
